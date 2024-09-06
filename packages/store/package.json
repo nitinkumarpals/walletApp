@@ -1,0 +1,16 @@
+{
+  "name": "@repo/store",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "recoil": "^0.7.7"
+  },
+  "exports": {
+    "./useBalance": "./src/hooks/useBalance"
+}
+}
