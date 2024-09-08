@@ -2,13 +2,15 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcryptjs from "bcryptjs";
 import db from "@repo/db/client";
 import { NextAuthOptions } from 'next-auth';
+import GoogleProvider from "next-auth/providers/google";
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: { label: "email", type: "email", placeholder: "emailaddress@email.com" },
-                password: { label: "password", type: "password", placeholder: "password" },
+                email: { label: "email", type: "email", placeholder: "emailaddress@email.com", required: true },
+                password: { label: "password", type: "password", placeholder: "password", required: true },
             },
             async authorize(credentials: any): Promise<any> {
                 try {
@@ -28,7 +30,8 @@ export const authOptions: NextAuthOptions = {
                         return {
                             id: user.id.toString(),
                             name: user.name,
-                            email: user.email
+                            email: user.email,
+                            number: user?.number
                         }
                     }
                     return null;
@@ -42,7 +45,11 @@ export const authOptions: NextAuthOptions = {
                     }
                 }
             },
-        })
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+          })
     ],
     secret: process.env.AUTH_SECRET || "secret",
     // pages: {
@@ -51,12 +58,22 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         jwt({ token, user }) {
             if (user) {
-                token.id = user.id
+                token.id = user.id;
+                
+                if (user.number) {
+                    token.number = user.number;
+                }
             }
             return token
         },
-        async session({ session, token }: any) {
-            session.user.id = token.id as string
+        async session({ session, token }) {
+            if(token){
+                session.user.id = token.id as string
+            if (token.number) {
+                session.user.number = token.number
+            }
+            }
+            
             return session
         },
     },

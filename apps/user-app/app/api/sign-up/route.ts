@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import db from "@repo/db/client";
 export async function POST(request: Request) {
     try {
-        const { name, email, password } = await request.json();
+        const { name, email, password, number } = await request.json();
         const existingUserByUsername = await db.user.findFirst({
             where: {
                 name
@@ -34,12 +34,13 @@ export async function POST(request: Request) {
             data: {
                 name,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                number: number
             }
         });
 
         return NextResponse.json(
-            { success: true, message: "User created successfully", id: user.id.toString(), name: user.name, email: user.email, status: 200 }
+            { success: true, message: "User created successfully", id: user.id.toString(), name: user.name, email: user.email, number: user?.number }, { status: 200 }
         )
     } catch (error) {
         console.error("Error:", error);
