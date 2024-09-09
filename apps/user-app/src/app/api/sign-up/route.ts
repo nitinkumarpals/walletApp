@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import db from "@repo/db/client";
-import { z } from 'zod';
-const signupSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    number: z.string().optional()
-});
+import { signupSchema } from "@repo/schemas/signupSchema";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
@@ -19,6 +13,8 @@ export async function POST(request: Request) {
             );
         }
         const { name, email, password, number } = parsedBody.data;
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const existingUserByUsername = await db.user.findFirst({
             where: {
                 name
@@ -31,32 +27,47 @@ export async function POST(request: Request) {
             );
         }
 
-        const existingUserByEmail = await db.user.findFirst({
+        const existingUserByEmail = await db.user.findUnique({
             where: {
                 email
             }
         });
+        if (existingUserByEmail && existingUserByEmail.googleId && existingUserByEmail.password == null) {
 
-        if (existingUserByEmail) {
+            const user =await db.user.update({
+                where: { id: existingUserByEmail.id },
+                data: {
+                    password: hashedPassword,
+                    number: number
+                }
+            })
+            return NextResponse.json(
+                { success: true, message: "User Updated successfully", id: user.id.toString(), name: user.name, email: user.email, number: user?.number , googleId: user?.googleId }, { status: 200 }
+
+            )
+
+        }
+        else if (existingUserByEmail) {
+
             return NextResponse.json(
                 { success: false, message: "Email already exists" },
                 { status: 400 }
             );
         }
+        else {
+            const user = await db.user.create({
+                data: {
+                    name,
+                    email,
+                    password: hashedPassword,
+                    number: number
+                }
+            });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await db.user.create({
-            data: {
-                name,
-                email,
-                password: hashedPassword,
-                number: number
-            }
-        });
-
-        return NextResponse.json(
-            { success: true, message: "User created successfully", id: user.id.toString(), name: user.name, email: user.email, number: user?.number }, { status: 200 }
-        )
+            return NextResponse.json(
+                { success: true, message: "User created successfully", id: user.id.toString(), name: user.name, email: user.email, number: user?.number }, { status: 200 }
+            )
+        }
     } catch (error) {
         console.error("Error:", error);
         return NextResponse.json(

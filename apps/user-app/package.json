@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
-    "@repo/schemas": "workspace:*",
+    "@repo/schemas": "*",
     "@repo/db": "*",
     "@repo/ui": "workspace:*",
     "bcryptjs": "^2.4.3",

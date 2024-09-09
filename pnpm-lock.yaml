@@ -80,7 +80,7 @@ importers:
         specifier: '*'
         version: link:../../packages/db
       '@repo/schemas':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../../packages/schemas
       '@repo/store':
         specifier: '*'
