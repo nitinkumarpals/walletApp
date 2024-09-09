@@ -6,6 +6,7 @@ declare module 'next-auth' {
         id: string;
         name: string;
         email: string;
+        googleId?: string;
     }
     interface Session {
         user: User;
@@ -15,5 +16,6 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
     interface JWT {
         number?: string;
+        googleId?: string;
     }
 }

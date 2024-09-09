@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials: any): Promise<any> {
                 try {
+
                     const user = await db.user.findFirst({
                         where: {
                             email: credentials.email as string
@@ -23,6 +24,9 @@ export const authOptions: NextAuthOptions = {
                         throw new Error('No user found with this email');
                     }
                     else if (user) {
+                        if (user.password === null) {
+                            throw new Error('User password is null');
+                        }
                         const isValid = await bcryptjs.compare(credentials.password as string, user.password);
                         if (!isValid) {
                             throw new Error('Incorrect password');
@@ -50,7 +54,49 @@ export const authOptions: NextAuthOptions = {
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID || "",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+            async profile(profile) :Promise<any> {
+                try {
+                    const user = await db.user.findFirst({
+                        where: { email: profile.email }
+                    });
+
+                    if (user) {
+                        if (!user.googleId || !user.authType) {
+                            await db.user.update({
+                                where: { id: user.id },
+                                data: {
+                                    googleId: profile.sub, 
+                                    authType: 'Google'    
+                                } 
+                            });
+                        }
+                        return {
+                            id: user.id.toString(),
+                            name: user.name,
+                            email: user.email,
+                            number: user?.number
+                        };
+                    } else {
+                        const newUser = await db.user.create({
+                            data: {
+                                email: profile.email,
+                                name: profile.name,
+                                googleId: profile.sub,
+                                authType: 'Google' 
+                            }
+                        });
+                        return {
+                            id: newUser.id.toString(),
+                            name: newUser.name,
+                            email: newUser.email
+                        };
+                    }
+                } catch (error) {
+                    console.error('Error during Google login:', error);
+                    throw new Error('Failed to login with Google');
+                }
+            }
         })
     ],
     secret: process.env.AUTH_SECRET || "secret",
@@ -58,6 +104,7 @@ export const authOptions: NextAuthOptions = {
     //     signIn: '/auth/sign-in'
     // },
     callbacks: {
+        
         jwt({ token, user }) {
             if (user) {
                 token.id = user.id;

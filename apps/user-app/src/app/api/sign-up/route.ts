@@ -1,9 +1,24 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import db from "@repo/db/client";
+import { z } from 'zod';
+const signupSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+    number: z.string().optional()
+});
 export async function POST(request: Request) {
     try {
-        const { name, email, password, number } = await request.json();
+        const body = await request.json();
+        const parsedBody = signupSchema.safeParse(body);
+        if (!parsedBody.success) {
+            return NextResponse.json(
+                { success: false, message: parsedBody.error.errors.map(e => e.message).join(", ") },
+                { status: 400 }
+            );
+        }
+        const { name, email, password, number } = parsedBody.data;
         const existingUserByUsername = await db.user.findFirst({
             where: {
                 name

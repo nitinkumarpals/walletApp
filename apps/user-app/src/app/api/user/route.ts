@@ -2,15 +2,19 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
 export const GET = async () => {
-    const session = await getServerSession(authOptions);
-    if (!session) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session) {
+            throw new Error('Not logged in');
+        }
         return NextResponse.json({
-            error: "Unauthorized"
-        }, {
-            status: 403
+            user : session.user
         })
+    } catch (error) {
+        console.error("Error:", error);
+        return NextResponse.json(
+            { error: (error as Error).message },
+            { status: 401 }
+        );
     }
-    return NextResponse.json({
-        user : session.user
-    })
 }
