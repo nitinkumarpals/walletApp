@@ -27,11 +27,13 @@ export const authOptions: NextAuthOptions = {
                         if (!isValid) {
                             throw new Error('Incorrect password');
                         }
-                        return {
-                            id: user.id.toString(),
-                            name: user.name,
-                            email: user.email,
-                            number: user?.number
+                        else {
+                            return {
+                                id: user.id.toString(),
+                                name: user.name,
+                                email: user.email,
+                                number: user?.number
+                            }
                         }
                     }
                     return null;
@@ -49,17 +51,17 @@ export const authOptions: NextAuthOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
-          })
+        })
     ],
     secret: process.env.AUTH_SECRET || "secret",
     // pages: {
-    //     signIn: '/sign-in'
+    //     signIn: '/auth/sign-in'
     // },
     callbacks: {
         jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                
+
                 if (user.number) {
                     token.number = user.number;
                 }
@@ -67,13 +69,13 @@ export const authOptions: NextAuthOptions = {
             return token
         },
         async session({ session, token }) {
-            if(token){
+            if (token) {
                 session.user.id = token.id as string
-            if (token.number) {
-                session.user.number = token.number
+                if (token.number) {
+                    session.user.number = token.number
+                }
             }
-            }
-            
+
             return session
         },
     },
