@@ -1,0 +1,15 @@
+{
+  "name": "bank_webhook",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts"
+  },
+  "dependencies": {
+    "hono": "^4.5.11",
+    "@repo/schemas": "*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240903.0",
+    "wrangler": "^3.57.2"
+  }
+}
