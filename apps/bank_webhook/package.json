@@ -6,7 +6,9 @@
   },
   "dependencies": {
     "hono": "^4.5.11",
-    "@repo/schemas": "*"
+    "@repo/schemas": "*",
+    "@repo/db": "*"
+
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240903.0",

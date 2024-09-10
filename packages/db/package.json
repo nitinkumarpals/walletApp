@@ -4,16 +4,17 @@
   "main": "index.js",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^22.5.4",
-    "typescript": "^5.5.4",
     "@repo/typescript-config": "*",
-    "prisma": "^5.19.1"
+    "@types/node": "^22.5.4",
+    "typescript": "^5.5.4"
   },
   "exports": {
-    "./client": "./index.ts"
+    "./client": "./index.ts",
+    "./accelerate" : "./accelerate.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.19.1"
-
+    "prisma": "^5.19.1",
+    "@prisma/client": "^5.19.1",
+    "@prisma/extension-accelerate": "^1.1.0"
   }
 }

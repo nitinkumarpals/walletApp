@@ -24,6 +24,9 @@ importers:
 
   apps/bank_webhook:
     dependencies:
+      '@repo/db':
+        specifier: '*'
+        version: link:../../packages/db
       '@repo/schemas':
         specifier: '*'
         version: link:../../packages/schemas
@@ -165,6 +168,12 @@ importers:
       '@prisma/client':
         specifier: ^5.19.1
         version: 5.19.1(prisma@5.19.1)
+      '@prisma/extension-accelerate':
+        specifier: ^1.1.0
+        version: 1.1.0(@prisma/client@5.19.1)
+      prisma:
+        specifier: ^5.19.1
+        version: 5.19.1
     devDependencies:
       '@repo/typescript-config':
         specifier: '*'
@@ -172,9 +181,6 @@ importers:
       '@types/node':
         specifier: ^22.5.4
         version: 22.5.4
-      prisma:
-        specifier: ^5.19.1
-        version: 5.19.1
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -1032,9 +1038,11 @@ packages:
 
   /@prisma/debug@5.19.1:
     resolution: {integrity: sha512-lAG6A6QnG2AskAukIEucYJZxxcSqKsMK74ZFVfCTOM/7UiyJQi48v6TQ47d6qKG3LbMslqOvnTX25dj/qvclGg==}
+    dev: false
 
   /@prisma/engines-version@5.19.1-2.69d742ee20b815d88e17e54db4a2a7a3b30324e3:
     resolution: {integrity: sha512-xR6rt+z5LnNqTP5BBc+8+ySgf4WNMimOKXRn6xfNRDSpHvbOEmd7+qAOmzCrddEc4Cp8nFC0txU14dstjH7FXA==}
+    dev: false
 
   /@prisma/engines@5.19.1:
     resolution: {integrity: sha512-kR/PoxZDrfUmbbXqqb8SlBBgCjvGaJYMCOe189PEYzq9rKqitQ2fvT/VJ8PDSe8tTNxhc2KzsCfCAL+Iwm/7Cg==}
@@ -1044,6 +1052,16 @@ packages:
       '@prisma/engines-version': 5.19.1-2.69d742ee20b815d88e17e54db4a2a7a3b30324e3
       '@prisma/fetch-engine': 5.19.1
       '@prisma/get-platform': 5.19.1
+    dev: false
+
+  /@prisma/extension-accelerate@1.1.0(@prisma/client@5.19.1):
+    resolution: {integrity: sha512-sESjhBZ4ywQjAVpKzsfhxyNu+9txIM5I6M1MPBaJBq/xDlqmniIAhlwIEt9KLtO80zqPxqbZYes18zrkgYqNiQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@prisma/client': '>=4.16.1'
+    dependencies:
+      '@prisma/client': 5.19.1(prisma@5.19.1)
+    dev: false
 
   /@prisma/fetch-engine@5.19.1:
     resolution: {integrity: sha512-pCq74rtlOVJfn4pLmdJj+eI4P7w2dugOnnTXpRilP/6n5b2aZiA4ulJlE0ddCbTPkfHmOL9BfaRgA8o+1rfdHw==}
@@ -1051,11 +1069,13 @@ packages:
       '@prisma/debug': 5.19.1
       '@prisma/engines-version': 5.19.1-2.69d742ee20b815d88e17e54db4a2a7a3b30324e3
       '@prisma/get-platform': 5.19.1
+    dev: false
 
   /@prisma/get-platform@5.19.1:
     resolution: {integrity: sha512-sCeoJ+7yt0UjnR+AXZL7vXlg5eNxaFOwC23h0KvW1YIXUoa7+W2ZcAUhoEQBmJTW4GrFqCuZ8YSP0mkDa4k3Zg==}
     dependencies:
       '@prisma/debug': 5.19.1
+    dev: false
 
   /@rtsao/scc@1.1.0:
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -5004,6 +5024,7 @@ packages:
       '@prisma/engines': 5.19.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: false
 
   /prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}

@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
-const prismaClientSingleton = () => {
-    return new PrismaClient()
+export const prismaClientSingleton = () => {
+    const prisma = new PrismaClient({
+        datasourceUrl: process.env.DATABASE_URL,
+    }).$extends(withAccelerate())
+    return prisma
 }
 
 declare global {
