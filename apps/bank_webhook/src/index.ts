@@ -19,25 +19,26 @@ app.post('/hdfcWebhook', async (c) => {
       return c.json({ error: 'Invalid data' }, 400)
     }
     // transactions-> either both of the db call happen or none of them
-    prisma.balance.update({
-      where: {
-        userId: user_identifier
-      },
-      data: {
-        amount: {
-          increment: amount
+    await prisma.$transaction([
+      prisma.balance.update({
+        where: {
+          userId: user_identifier
+        },
+        data: {
+          amount: {
+            increment: amount
+          }
         }
-      }
-    })
-
-    prisma.onRampTransaction.update({
-      where: {
-        token
-      },
-      data: {
-        status: 'Success',
-      }
-    })
+      }),
+      prisma.onRampTransaction.update({
+        where: {
+          token
+        },
+        data: {
+          status: 'Success',
+        }
+      })
+    ]);
     return c.json({ status: 200, message: 'Captured', paymentInformation: { token: token, useId: user_identifier, amount: amount } });
     //if status 200 is not sent to bank than bank will refund the money to user 
 
