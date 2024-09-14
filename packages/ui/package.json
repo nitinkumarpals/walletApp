@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./text-input": "./src/text-input.tsx",
+    "./select": "./src/select.tsx",
+    "./center": "./src/center.tsx",
     "./appbar": "./src/appbar.tsx",
     "./sign-in": "./src/sign-in.tsx",
     "./button": "./src/button.tsx",
