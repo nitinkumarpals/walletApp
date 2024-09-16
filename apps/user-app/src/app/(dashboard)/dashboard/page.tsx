@@ -4,6 +4,7 @@ const page = () => {
         <div>
             Dashboard
         </div>
+
     )
 }
 
