@@ -16,6 +16,8 @@ export async function POST(request: Request) {
       );
     }
     const { name, email, password, number } = parsedBody.data;
+    const token = (Math.random() * 1000).toString();
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const existingUserByUsername = await db.user.findFirst({
@@ -71,6 +73,21 @@ export async function POST(request: Request) {
           email,
           password: hashedPassword,
           number: number,
+          balance: {
+            create: {
+              amount: 0,
+              locked: 0,
+            },
+          },
+          onRampTransactions: {
+            create: {
+              startTime: new Date(),
+              status: "Success",
+              amount: 0,
+              token,
+              provider: "HDFC Bank",
+            },
+          },
         },
       });
 
