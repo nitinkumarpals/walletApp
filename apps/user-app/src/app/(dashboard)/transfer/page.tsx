@@ -7,6 +7,9 @@ import { authOptions } from "../../api/auth/[...nextauth]/options";
 import { OnRampStatus } from "../../../components/OnRampTransaction";
 async function getBalance() {
   const session = await getServerSession(authOptions);
+  if (!session || !session.user?.id) {
+    throw new Error("User not authenticated or session missing.");
+  }
   const balance = await prisma.balance.findFirst({
     where: {
       userId: Number(session?.user?.id),

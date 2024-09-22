@@ -6,7 +6,7 @@ import prisma from "@repo/db/client";
 const createOnrampTransaction = async (amount: number, provider: string) => {
   try {
     const session = await getServerSession(authOptions);
-    const token = Math.random().toString();
+    const token = (Math.random() * 1000).toString();
     if (!session || !session.user || !session.user.id) {
       throw new Error("User not found");
     }
