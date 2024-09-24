@@ -5,7 +5,11 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -13,7 +17,8 @@
     "**/*.ts",
     "**/*.tsx",
     "./tailwind.config.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "postcss.config.js" 
   ],
   "exclude": ["node_modules"]
 }

@@ -5,7 +5,7 @@ import { OnRampTransactions } from "../../../components/OnRampTransaction";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/options";
 import { OnRampStatus } from "../../../components/OnRampTransaction";
-async function getBalance() {
+export async function getBalance() {
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.id) {
     throw new Error("User not authenticated or session missing.");
