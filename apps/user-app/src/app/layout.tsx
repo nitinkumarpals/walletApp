@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <Providers>
         <body>
-          <div className="min-w-screen min-h-screen bg-[#ebe6e6]">
+          <div className="min-w-screen min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
             <AppbarClient />
             {children}
           </div>

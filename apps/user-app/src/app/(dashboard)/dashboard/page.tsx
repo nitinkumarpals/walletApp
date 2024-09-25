@@ -17,7 +17,6 @@ export default function DashboardContent() {
   return (
     <div
       className="p-4 ml-36 sm:p-6 md:p-8 min-h-screen"
-      style={{ backgroundColor: "#EBE6E6" }}
     >
       <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">
         Welcome back, User!
