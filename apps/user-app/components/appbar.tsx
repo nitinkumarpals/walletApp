@@ -7,14 +7,12 @@ interface AppbarProps {
     name?: string | null;
   };
   onSignin: () => Promise<void>;
-  onSignup: () => Promise<void>;
   onSignout: () => Promise<void>;
 }
 
 export const Appbar = ({
   user,
   onSignin,
-  onSignup,
   onSignout,
 }: AppbarProps) => {
   return (
@@ -40,12 +38,6 @@ export const Appbar = ({
               className="text-blue-700 hover:text-blue-900 hover:bg-blue-100"
             >
               Login
-            </Button>
-            <Button
-              onClick={onSignup}
-              className="bg-blue-600 text-white hover:bg-blue-700"
-            >
-              Sign Up
             </Button>
           </>
         )}

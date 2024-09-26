@@ -126,9 +126,9 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.AUTH_SECRET || "secret",
-  // pages: {
-  //     signIn: '/auth/sign-in'
-  // },
+  pages: {
+      signIn: '/landing',
+  },
   callbacks: {
     jwt({ token, user }) {
       if (user) {

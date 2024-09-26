@@ -1,27 +1,24 @@
-"use client"
+"use client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Appbar } from "@/components/appbar";
 import { useRouter } from "next/navigation";
 
 export function AppbarClient() {
-    const session = useSession();
-    const router = useRouter();
+  const session = useSession();
+  const router = useRouter();
 
-    const handleSignin = () => signIn();
-    
-    const handleSignup = () => signIn(); // make it signup
+  const handleSignin = () => signIn();
 
-    const handleSignout = async () => {
-        await signOut();
-        router.push("/api/auth/signin");
-    };
+  const handleSignout = async () => {
+    await signOut({ callbackUrl: "/landing" });
+    router.replace("/landing");
+  };
 
-    return (
-        <Appbar  
-          onSignin={handleSignin}
-          onSignup={handleSignup}
-          onSignout={handleSignout}
-          user={session.data?.user}
-        />
-    );
+  return (
+    <Appbar
+      onSignin={handleSignin}
+      onSignout={handleSignout}
+      user={session.data?.user}
+    />
+  );
 }

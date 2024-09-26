@@ -1,9 +1,16 @@
 import { SidebarItem } from "../../components/SidebarItem";
-export default function Layout({
+import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
+export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
-}): JSX.Element {
+}): Promise<JSX.Element> {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    await redirect("/landing");
+  }
   return (
     <div className="flex">
       <div className="w-72 border-r border-slate-400 min-h-screen mr-4 pt-28">
