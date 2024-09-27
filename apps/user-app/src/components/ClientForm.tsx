@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 type FormData = {
-  username: string;
+  name: string;
   email: string;
   password: string;
+  number: string;
 };
 
 export default function ClientForm() {
@@ -27,7 +28,7 @@ export default function ClientForm() {
   const { toast } = useToast();
   const form = useForm<FormData>({
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -35,7 +36,6 @@ export default function ClientForm() {
 
   const onSubmit = async (data: FormData) => {
     if (isLogin) {
-      // Handle login with NextAuth
       const result = await signIn("credentials", {
         redirect: false,
         email: data.email,
@@ -76,21 +76,31 @@ export default function ClientForm() {
     } else {
       // Handle custom signup
       try {
-        const response = await fetch("/api/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-        if (response.ok) {
-          // Handle successful signup (e.g., show success message, switch to login mode)
-          console.log("Signup successful");
+        const response = await axios.post("/api/sign-up", data);
+        console.log("full response: "+response);
+        if (response.data.success) {
+          toast({
+            title: "Success",
+            description: "Signup successful",
+            variant: "default",
+          });
           setIsLogin(true);
-        } else {
-          // Handle signup error
-          console.error("Signup failed");
-        }
+        } 
       } catch (error) {
         console.error("Signup error:", error);
+        if (axios.isAxiosError(error) && error.response) {
+          toast({
+            title: "Error",
+            description: `${error.response.data?.message || "Something went wrong!"}`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: "An unexpected error occurred",
+            variant: "destructive",
+          });
+        }
       }
     }
   };
@@ -113,10 +123,10 @@ export default function ClientForm() {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* {!isLogin && (
+          {!isLogin && (
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-blue-700">Username</FormLabel>
@@ -130,7 +140,26 @@ export default function ClientForm() {
                 </FormItem>
               )}
             />
-          )} */}
+          )}
+          {!isLogin && (
+            <FormField
+              control={form.control}
+              name="number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-blue-700">
+                    Phone Number (optional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="border-blue-300 focus:border-blue-500"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="email"
