@@ -83,7 +83,7 @@ export async function POST(request: Request) {
         number: number,
         balance: {
           create: {
-            amount: 0,
+            amount: 5999900,
             locked: 0,
           },
         },
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
           create: {
             startTime: new Date(),
             status: "Success",
-            amount: 0,
+            amount: 5999900,
             token,
             provider: "HDFC Bank",
           },

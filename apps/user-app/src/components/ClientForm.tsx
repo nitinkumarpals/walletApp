@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Form,
@@ -24,6 +25,7 @@ type FormData = {
 
 export default function ClientForm() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
   const form = useForm<FormData>({
@@ -35,49 +37,65 @@ export default function ClientForm() {
   });
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     if (isLogin) {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
-      console.log(result);
-      if (result?.error) {
-        if (result.error === "CredentialsSignin") {
-          toast({
-            title: "Login Failed",
-            description: "Incorrect username or password",
-            variant: "destructive",
-          });
-        } else if (result.error === "User password is null") {
-          toast({
-            title: "Error",
-            description:
-              "No password found. Please set a password or use Google to sign in.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: result.error,
-            variant: "destructive",
-          });
-        }
-      }
-      if (result?.url) {
-        console.log("Displaying toast for successful login");
-        toast({
-          title: "Success",
-          description: "Login Successful",
-          variant: "default",
+      try {
+        const result = await signIn("credentials", {
+          redirect: false,
+          email: data.email,
+          password: data.password,
         });
-        router.replace("/dashboard");
+
+        console.log(result);
+
+        if (result?.error) {
+          if (result.error === "CredentialsSignin") {
+            toast({
+              title: "Login Failed",
+              description: "Incorrect username or password",
+              variant: "destructive",
+            });
+          } else if (result.error === "User password is null") {
+            toast({
+              title: "Error",
+              description:
+                "No password found. Please set a password or use Google to sign in.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Error",
+              description: result.error,
+              variant: "destructive",
+            });
+          }
+        }
+
+        if (result?.url) {
+          toast({
+            title: "Success",
+            description: "Login Successful",
+            variant: "default",
+          });
+          router.replace("/dashboard");
+        }
+      } catch (error) {
+        console.error("An error occurred during the sign-in process", error);
+        toast({
+          title: "Error",
+          description:
+            "Something went wrong while trying to log in. Please try again.",
+          variant: "destructive",
+        });
+      }
+      finally {
+        setIsLoading(false);
       }
     } else {
       // Handle custom signup
       try {
         const response = await axios.post("/api/sign-up", data);
-        console.log("full response: "+response);
+        console.log("full response: " + response);
         if (response.data.success) {
           toast({
             title: "Success",
@@ -85,7 +103,7 @@ export default function ClientForm() {
             variant: "default",
           });
           setIsLogin(true);
-        } 
+        }
       } catch (error) {
         console.error("Signup error:", error);
         if (axios.isAxiosError(error) && error.response) {
@@ -101,6 +119,9 @@ export default function ClientForm() {
             variant: "destructive",
           });
         }
+      }
+      finally{
+        setIsLoading(false);
       }
     }
   };
@@ -197,9 +218,17 @@ export default function ClientForm() {
           />
           <Button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-blue-600 text-white hover:bg-blue-700"
           >
-            {isLogin ? "Login" : "Sign Up"}
+            {isLoading ? (
+              <div className="flex items-center">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </div>
+            ) : (
+              <>{isLogin ? "Login" : "Sign Up"}</>
+            )}
           </Button>
         </form>
       </Form>

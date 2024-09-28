@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
@@ -42,7 +43,7 @@ function formatDate(date: Date) {
 function formatAmount(amount: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
   }).format(amount / 100);
 }
 
@@ -75,7 +76,7 @@ export default function TransactionsPage() {
             details:
               t.fromUserId === t.toUserId
                 ? "Self Transfer"
-                : `${t.fromUser.name} → ${t.toUser.name}`, // Display usernames
+                : `${t.fromUser.name} → ${t.toUser.name}`,
             status: "Completed",
           })),
           ...onRampTransactions.map((t) => ({
@@ -105,18 +106,6 @@ export default function TransactionsPage() {
       (t.details.toLowerCase().includes(search.toLowerCase()) ||
         t.status.toLowerCase().includes(search.toLowerCase()))
   );
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading transactions...
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="text-red-500 text-center">{error}</div>;
-  }
 
   return (
     <div className="container mx-auto py-10">
@@ -164,31 +153,54 @@ export default function TransactionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTransactions.map((transaction) => (
-                <TableRow key={`${transaction.type}-${transaction.id}`}>
-                  <TableCell>{transaction.type}</TableCell>
-                  <TableCell>{formatAmount(transaction.amount)}</TableCell>
-                  <TableCell>{formatDate(transaction.date)}</TableCell>
-                  <TableCell>{transaction.details}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        transaction.status.toLowerCase() === "completed"
-                          ? "default"
-                          : "secondary"
-                      }
-                    >
-                      {transaction.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {loading
+                ? Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Skeleton className="h-4 w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-32" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-6 w-20" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : filteredTransactions.map((transaction, index) => (
+                    <TableRow key={`placeholder-${index}`}>
+                      <TableCell>{transaction.type}</TableCell>
+                      <TableCell>{formatAmount(transaction.amount)}</TableCell>
+                      <TableCell>{formatDate(transaction.date)}</TableCell>
+                      <TableCell>{transaction.details}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            transaction.status.toLowerCase() === "completed"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
+                          {transaction.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
-          {filteredTransactions.length === 0 && (
+          {!loading && filteredTransactions.length === 0 && (
             <div className="text-center py-4 text-gray-500">
               No transactions found.
             </div>
+          )}
+          {error && (
+            <div className="text-red-500 text-center mt-4">{error}</div>
           )}
         </CardContent>
       </Card>

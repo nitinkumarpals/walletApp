@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
                 authType: "Google",
                 balance: {
                   create: {
-                    amount: 0,
+                    amount: 5999900,
                     locked: 0,
                   },
                 },
@@ -105,7 +105,7 @@ export const authOptions: NextAuthOptions = {
                   create: {
                     startTime: new Date(),
                     status: "Success",
-                    amount: 0,
+                    amount: 5999900,
                     token,
                     provider: "HDFC Bank",
                   },
