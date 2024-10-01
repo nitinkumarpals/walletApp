@@ -3,10 +3,8 @@ import { SendCard } from "../../../components/SendCard";
 
 const page = () => {
   return (
-    <div className="w-full">
-      <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">
-        P2P Transfer
-      </div>
+    <div className="container mx-auto py-10">
+      <h1 className="text-4xl font-bold mb-8 text-[#6a51a6]">P2P Transfer</h1>
       <SendCard />
     </div>
   );

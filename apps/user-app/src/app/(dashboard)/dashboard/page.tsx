@@ -15,10 +15,8 @@ async function balanceFunction() {
 export default function DashboardContent() {
   const balance = balanceFunction();
   return (
-    <div
-      className="p-4 ml-36 sm:p-6 md:p-8 min-h-screen"
-    >
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">
+    <div className="p-4 ml-36 sm:p-6 md:p-8 min-h-screen">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-[#6a51a6]">
         Welcome back, User!
       </h2>
 
@@ -72,7 +70,6 @@ export default function DashboardContent() {
               </span>
               <span className="text-green-500">+₹100.00</span>
             </li>
-            
           </ul>
         </CardContent>
       </Card>

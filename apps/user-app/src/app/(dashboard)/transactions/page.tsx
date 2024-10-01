@@ -109,7 +109,7 @@ export default function TransactionsPage() {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold mb-8">Transactions</h1>
+      <h1 className="text-4xl font-bold mb-8 text-[#6a51a6]">Transactions</h1>
       <Card>
         <CardHeader>
           <CardTitle>Your Transactions</CardTitle>
@@ -184,7 +184,9 @@ export default function TransactionsPage() {
                           variant={
                             transaction.status.toLowerCase() === "completed"
                               ? "default"
-                              : "secondary"
+                              : transaction.status.toLowerCase() === "success"
+                                ? "success"
+                                : "secondary"
                           }
                         >
                           {transaction.status}
