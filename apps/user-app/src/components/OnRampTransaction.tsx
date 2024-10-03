@@ -87,13 +87,13 @@ export default function RecentTransactions() {
     <Card className="w-full">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-bold">
-          Recent OnRamp Transactions
+          Recent Transactions
         </CardTitle>
       </CardHeader>
       <CardContent>
         {transactions.length === 0 ? (
           <div className="text-center py-4 text-gray-500">
-            No recent OnRamp transactions
+            No recent transactions
           </div>
         ) : (
           <ScrollArea className="h-[200px]">

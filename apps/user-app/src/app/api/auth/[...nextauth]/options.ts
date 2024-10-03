@@ -127,7 +127,7 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.AUTH_SECRET || "secret",
   pages: {
-      signIn: '/landing',
+      signIn: '/',
   },
   callbacks: {
     jwt({ token, user }) {

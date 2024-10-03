@@ -9,7 +9,7 @@ export default async function Layout({
 }): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
   if (!session) {
-    await redirect("/landing");
+    await redirect("/");
   }
   return (
     <div className="flex">

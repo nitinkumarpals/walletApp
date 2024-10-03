@@ -10,8 +10,8 @@ export function AppbarClient() {
   const handleSignin = () => signIn();
 
   const handleSignout = async () => {
-    await signOut({ callbackUrl: "/landing" });
-    router.replace("/landing");
+    await signOut({ callbackUrl: "/" });
+    router.replace("/");
   };
 
   return (
