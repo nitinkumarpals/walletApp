@@ -108,30 +108,39 @@ export default function TransactionsPage() {
   );
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold mb-8 text-[#6a51a6]">Transactions</h1>
+    <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-[#6a51a6]">
+        Transactions
+      </h1>
       <Card>
         <CardHeader>
-          <CardTitle>Your Transactions</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl">
+            Your Transactions
+          </CardTitle>
           <CardDescription>
             A list of all your P2P transfers and on-ramp transactions.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col md:flex-row justify-between mb-4 space-y-4 md:space-y-0 md:space-x-4">
+          <div className="flex flex-col sm:flex-row justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-4">
             <div className="flex-1">
-              <Label htmlFor="search">Search</Label>
+              <Label htmlFor="search" className="mb-1 block">
+                Search
+              </Label>
               <Input
                 id="search"
                 placeholder="Search transactions..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                className="w-full"
               />
             </div>
-            <div>
-              <Label htmlFor="filter">Filter</Label>
+            <div className="w-full sm:w-auto">
+              <Label htmlFor="filter" className="mb-1 block">
+                Filter
+              </Label>
               <Select value={filter} onValueChange={setFilter}>
-                <SelectTrigger id="filter">
+                <SelectTrigger id="filter" className="w-full">
                   <SelectValue placeholder="Filter transactions" />
                 </SelectTrigger>
                 <SelectContent>
@@ -142,60 +151,66 @@ export default function TransactionsPage() {
               </Select>
             </div>
           </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Details</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading
-                ? Array.from({ length: 5 }).map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Skeleton className="h-4 w-16" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-24" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-32" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-40" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-6 w-20" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : filteredTransactions.map((transaction, index) => (
-                    <TableRow key={`placeholder-${index}`}>
-                      <TableCell>{transaction.type}</TableCell>
-                      <TableCell>{formatAmount(transaction.amount)}</TableCell>
-                      <TableCell>{formatDate(transaction.date)}</TableCell>
-                      <TableCell>{transaction.details}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            transaction.status.toLowerCase() === "completed"
-                              ? "default"
-                              : transaction.status.toLowerCase() === "success"
-                                ? "success"
-                                : "secondary"
-                          }
-                        >
-                          {transaction.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-            </TableBody>
-          </Table>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Type</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead className="hidden sm:table-cell">Date</TableHead>
+                  <TableHead>Details</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading
+                  ? Array.from({ length: 5 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-4 w-16" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <Skeleton className="h-4 w-32" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-40" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-20" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : filteredTransactions.map((transaction) => (
+                      <TableRow key={transaction.id}>
+                        <TableCell>{transaction.type}</TableCell>
+                        <TableCell>
+                          {formatAmount(transaction.amount)}
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          {formatDate(transaction.date)}
+                        </TableCell>
+                        <TableCell>{transaction.details}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              transaction.status.toLowerCase() === "completed"
+                                ? "default"
+                                : transaction.status.toLowerCase() === "success"
+                                  ? "success"
+                                  : "secondary"
+                            }
+                          >
+                            {transaction.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+              </TableBody>
+            </Table>
+          </div>
           {!loading && filteredTransactions.length === 0 && (
             <div className="text-center py-4 text-gray-500">
               No transactions found.
@@ -209,3 +224,4 @@ export default function TransactionsPage() {
     </div>
   );
 }
+  

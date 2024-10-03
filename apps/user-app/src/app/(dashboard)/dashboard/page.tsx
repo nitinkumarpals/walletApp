@@ -1,46 +1,47 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { getBalance } from "../transfer/page";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { getBalance } from "../transfer/page"
 import {
   ArrowUpIcon,
   ArrowDownIcon,
   RotateCcwIcon,
   TrendingUpIcon,
-} from "lucide-react";
-async function balanceFunction() {
-  const balance = await getBalance();
-  return balance.amount / 100;
-}
-export default function DashboardContent() {
-  const balance = balanceFunction();
+} from "lucide-react"
+
+export default async function DashboardContent() {
+  const balanceData = await getBalance()
+  const balance = balanceData.amount / 100
+
   return (
-    <div className="p-4 ml-36 sm:p-6 md:p-8 min-h-screen">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-[#6a51a6]">
+    <div className="p-4 md:ml-36 lg:p-8 min-h-screen">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-[#6a51a6]">
         Welcome back, User!
       </h2>
 
       {/* Balance and Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <Card>
           <CardHeader>
-            <CardTitle>Your Balance</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Your Balance</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">₹{balance}</p>
+            <p className="text-2xl sm:text-3xl font-bold">
+              ₹{balance.toFixed(2)}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-wrap gap-2 sm:gap-4">
-            <Button className="flex-1" asChild>
+          <CardContent className="flex flex-col xl:flex-row gap-2 sm:gap-4">
+            <Button className="flex-1 text-sm sm:text-base" asChild>
               <Link href="/p2p">
                 <ArrowUpIcon className="mr-2 h-4 w-4" /> Send Money
               </Link>
             </Button>
-            <Button variant="outline" className="flex-1" asChild>
+            <Button variant="outline" className="flex-1 text-sm sm:text-base" asChild>
               <Link href="/transfer">
                 <ArrowDownIcon className="mr-2 h-4 w-4" /> Add Money
               </Link>
@@ -52,10 +53,10 @@ export default function DashboardContent() {
       {/* Recent Transactions */}
       <Card className="mb-6 sm:mb-8">
         <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Recent Transactions</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2">
+          <ul className="space-y-2 text-sm sm:text-base">
             <li className="flex justify-between items-center">
               <span className="flex items-center">
                 <ArrowUpIcon className="mr-2 h-4 w-4 text-red-500" />
@@ -82,7 +83,7 @@ export default function DashboardContent() {
             <ArrowUpIcon className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹1,234</div>
+            <div className="text-xl sm:text-2xl font-bold">₹1,234</div>
             <p className="text-xs text-muted-foreground">
               +20.1% from last month
             </p>
@@ -96,7 +97,7 @@ export default function DashboardContent() {
             <ArrowDownIcon className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹5,678</div>
+            <div className="text-xl sm:text-2xl font-bold">₹5,678</div>
             <p className="text-xs text-muted-foreground">
               +10.5% from last month
             </p>
@@ -108,7 +109,7 @@ export default function DashboardContent() {
             <RotateCcwIcon className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">23</div>
+            <div className="text-xl sm:text-2xl font-bold">23</div>
             <p className="text-xs text-muted-foreground">+5 from last month</p>
           </CardContent>
         </Card>
@@ -118,7 +119,7 @@ export default function DashboardContent() {
             <TrendingUpIcon className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">60%</div>
+            <div className="text-xl sm:text-2xl font-bold">60%</div>
             <p className="text-xs text-muted-foreground">+5% to goal</p>
           </CardContent>
         </Card>
@@ -127,18 +128,18 @@ export default function DashboardContent() {
       {/* Promotions or Tips */}
       <Card>
         <CardHeader>
-          <CardTitle>Tips & Promotions</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Tips & Promotions</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm">
+          <p className="text-sm sm:text-base">
             Save more by referring friends! Get ₹50 for each successful
             referral.
           </p>
-          <Button className="mt-4" variant="outline">
+          <Button className="mt-4 text-sm sm:text-base" variant="outline">
             Refer a Friend
           </Button>
         </CardContent>
-      </Card>
+        </Card>
     </div>
-  );
+  )
 }
