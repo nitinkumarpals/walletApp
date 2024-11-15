@@ -1,4 +1,4 @@
-name: build succeeds on PR
+name: Build succeeds on PR
 
 on:
   pull_request:
@@ -7,20 +7,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        node-version: [20]
+    name: Build the project
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install pnpm
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
-      - name: Install dependencies
+
+      - name: Install Dependencies
         run: pnpm install
+
+      - name: Run Build
+        run: pnpm run build
