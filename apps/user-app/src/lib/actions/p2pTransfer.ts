@@ -27,7 +27,7 @@ export async function p2pTransfer(to: string, amount: number) {
     }
 
     // Execute transaction in a single database connection
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // Lock sender's balance row to prevent concurrent updates
       await tx.$executeRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} FOR UPDATE`;
       const fromBalance = await tx.balance.findFirst({
