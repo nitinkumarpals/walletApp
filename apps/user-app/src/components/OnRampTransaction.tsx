@@ -6,9 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from "lucide-react";
 import { getTransactions } from "../lib/actions/getTransactions";
+// eslint-disable-next-line no-unused-vars
 enum TransactionStatus {
+  // eslint-disable-next-line no-unused-vars
   Success = "success",
+  // eslint-disable-next-line no-unused-vars
   Failure = "failed",
+  // eslint-disable-next-line no-unused-vars
   Processing = "pending",
 }
 

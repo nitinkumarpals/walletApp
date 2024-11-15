@@ -15,7 +15,6 @@ import {
 import { sendFormSchema } from "@repo/schemas/sendFormSchema";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { p2pTransfer } from "../lib/actions/p2pTransfer";
 import { Loader2, Send } from "lucide-react";
