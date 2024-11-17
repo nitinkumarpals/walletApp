@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,26 @@ export default function AddMoney() {
   const [amount, setAmount] = useState("");
   const [provider, setProvider] = useState("");
   const { toast } = useToast();
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadRazorpay = () => {
+      if (document.getElementById("razorpay-script")) return; // Avoid loading the script multiple times
+      const script = document.createElement("script");
+      script.id = "razorpay-script";
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => setRazorpayLoaded(true);
+      script.onerror = () => {
+        toast({
+          title: "Razorpay SDK Failed to Load",
+          description: "Please check your internet connection.",
+          variant: "destructive",
+        });
+      };
+      document.body.appendChild(script);
+    };
+    loadRazorpay();
+  }, [toast]);
 
   const handleAddMoney = async () => {
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
@@ -57,14 +77,50 @@ export default function AddMoney() {
       });
       return;
     }
-
-    try {
-      await createOnrampTransaction(Number(amount) * 100, provider);
+    if (!razorpayLoaded) {
       toast({
-        title: "Transaction Initiated",
-        description: "Redirecting to your bank...",
+        title: "Razorpay Not Loaded",
+        description: "Please wait while we load the payment gateway.",
+        variant: "destructive",
       });
-      window.location.href = redirectUrl || "";
+      return;
+    }
+    try {
+      const order = await createOnrampTransaction(
+        Number(amount) * 100,
+        provider
+      );
+      const options = {
+        key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
+        amount: Number(amount) * 100, // Amount in paise
+        currency: "INR",
+        name: "Your Business Name",
+        description: "Add Money Transaction",
+        image: "https://example.com/your_logo", // Optional logo URL
+        order_id: order.data?.id, // Replace with order ID from your server
+        handler: (response: any) => {
+          toast({
+            title: "Payment Successful",
+            description: `Payment ID: ${response.razorpay_payment_id}`,
+          });
+          console.log(response); // Handle success response
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.on("payment.failed", (response: any) => {
+        toast({
+          title: "Payment Failed",
+          description: response.error.description,
+          variant: "destructive",
+        });
+        console.error(response.error); // Handle failure response
+      });
+
+      razorpay.open();
     } catch (error) {
       toast({
         title: "Transaction Failed",
