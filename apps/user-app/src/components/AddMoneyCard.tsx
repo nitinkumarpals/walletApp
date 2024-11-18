@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
-import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
+import { validateHeaderName } from "http";
+import { razorpayAction } from "../lib/actions/rajorpayAction";
 
 const SUPPORTED_BANKS = [
   {
@@ -86,10 +87,7 @@ export default function AddMoney() {
       return;
     }
     try {
-      const order = await createOnrampTransaction(
-        Number(amount) * 100,
-        provider
-      );
+      const order = await razorpayAction(Number(amount) * 100);
       const options = {
         key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
         amount: Number(amount) * 100, // Amount in paise
@@ -97,13 +95,13 @@ export default function AddMoney() {
         name: "Your Business Name",
         description: "Add Money Transaction",
         image: "https://example.com/your_logo", // Optional logo URL
-        order_id: order.data?.id, // Replace with order ID from your server
+        order_id: order.order?.id, // Replace with order ID from your server
         handler: (response: any) => {
           toast({
             title: "Payment Successful",
             description: `Payment ID: ${response.razorpay_payment_id}`,
           });
-          console.log(response); // Handle success response
+          console.log("Payment successful:", response); // Handle success response
         },
         theme: {
           color: "#3399cc",
