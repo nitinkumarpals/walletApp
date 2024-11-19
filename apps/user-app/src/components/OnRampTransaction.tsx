@@ -38,7 +38,7 @@ export default function RecentTransactions() {
             status:
               t.status === "Success"
                 ? TransactionStatus.Success
-                : t.status === "failed"
+                : t.status === "Failure"
                   ? TransactionStatus.Failure
                   : TransactionStatus.Processing,
             provider: t.provider,

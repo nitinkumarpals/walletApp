@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
-import { validateHeaderName } from "http";
 import { razorpayAction } from "../lib/actions/rajorpayAction";
+import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
 
 const SUPPORTED_BANKS = [
   {
@@ -102,6 +102,13 @@ export default function AddMoney() {
             description: `Payment ID: ${response.razorpay_payment_id}`,
           });
           console.log("Payment successful:", response); // Handle success response
+          createOnrampTransaction(
+            Number(amount) * 100,
+            "Processing",
+            provider
+          ).then((result) => {
+            console.log("Onramp transaction created:", result);
+          });
         },
         theme: {
           color: "#3399cc",
@@ -116,6 +123,11 @@ export default function AddMoney() {
           variant: "destructive",
         });
         console.error(response.error); // Handle failure response
+        createOnrampTransaction(Number(amount) * 100, "Failure", provider).then(
+          (result) => {
+            console.log("Onramp transaction failed:", result);
+          }
+        );
       });
 
       razorpay.open();
