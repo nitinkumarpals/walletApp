@@ -5,13 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
 import { razorpayAction } from "../lib/actions/rajorpayAction";
@@ -19,29 +12,10 @@ import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
-const SUPPORTED_BANKS = [
-  {
-    name: "HDFC Bank",
-    redirectUrl: "https://netbanking.hdfcbank.com",
-  },
-  {
-    name: "Axis Bank",
-    redirectUrl: "https://www.axisbank.com/",
-  },
-  {
-    name: "Kotak Mahindra Bank",
-    redirectUrl: "https://netbanking.kotak.com/knb2/",
-  },
-];
-
 export default function AddMoney() {
   const { data: session } = useSession();
 
-  const [redirectUrl, setRedirectUrl] = useState(
-    SUPPORTED_BANKS[0]?.redirectUrl
-  );
   const [amount, setAmount] = useState("");
-  const [provider, setProvider] = useState("");
   const { toast } = useToast();
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
 
@@ -73,15 +47,6 @@ export default function AddMoney() {
       });
       return;
     }
-
-    if (!provider) {
-      toast({
-        title: "Bank Not Selected",
-        description: "Please select a bank to proceed.",
-        variant: "destructive",
-      });
-      return;
-    }
     if (!razorpayLoaded) {
       toast({
         title: "Razorpay Not Loaded",
@@ -96,7 +61,7 @@ export default function AddMoney() {
         key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
         amount: Number(amount) * 100, // Amount in paise
         currency: "INR",
-        name: "Your Business Name",
+        name: "Wallet App",
         description: "Add Money Transaction",
         image: "https://example.com/your_logo", // Optional logo URL
         order_id: order.order?.id, // Replace with order ID from your server
@@ -109,7 +74,7 @@ export default function AddMoney() {
           createOnrampTransaction(
             Number(amount) * 100,
             "Processing",
-            provider,
+            "Razorpay",
             response.razorpay_signature
           ).then((result) => {
             console.log("Onramp transaction created:", result);
@@ -120,9 +85,6 @@ export default function AddMoney() {
                 razorpay_signature: response.razorpay_signature,
                 user_identifier: session?.user?.id,
                 amount,
-              })
-              .then((response) => {
-                console.log(response);
               })
               .catch((error) => {
                 console.error(error);
@@ -145,7 +107,7 @@ export default function AddMoney() {
         createOnrampTransaction(
           Number(amount) * 100,
           "Failure",
-          provider,
+          "Razorpay",
           response.razorpay_signature
         ).then((result) => {
           console.log("Onramp transaction failed:", result);
@@ -181,29 +143,6 @@ export default function AddMoney() {
               className="pl-10"
             />
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="bank">Bank</Label>
-          <Select
-            onValueChange={(value) => {
-              const selectedBank = SUPPORTED_BANKS.find(
-                (x) => x.name === value
-              );
-              setRedirectUrl(selectedBank?.redirectUrl || "");
-              setProvider(selectedBank?.name || "");
-            }}
-          >
-            <SelectTrigger id="bank">
-              <SelectValue placeholder="Select your bank" />
-            </SelectTrigger>
-            <SelectContent>
-              {SUPPORTED_BANKS.map((bank) => (
-                <SelectItem key={bank.name} value={bank.name}>
-                  {bank.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
         <Button onClick={handleAddMoney} className="w-full">
           Add Money
