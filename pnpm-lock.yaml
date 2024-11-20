@@ -33,10 +33,16 @@ importers:
       hono:
         specifier: ^4.5.11
         version: 4.5.11
+      razorpay:
+        specifier: ^2.9.5
+        version: 2.9.5
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20240903.0
         version: 4.20240903.0
+      '@types/node':
+        specifier: ^22.9.1
+        version: 22.9.1
       wrangler:
         specifier: ^3.57.2
         version: 3.75.0(@cloudflare/workers-types@4.20240903.0)
@@ -1978,6 +1984,12 @@ packages:
 
   /@types/node@22.5.4:
     resolution: {integrity: sha512-FDuKUJQm/ju9fT/SeX/6+gBzoPzlVCzfzmGkwKvRHQVxi4BntVbyIwf6a4Xn62mrvndLiml6z/UBXIdEVjQLXg==}
+    dependencies:
+      undici-types: 6.19.8
+    dev: true
+
+  /@types/node@22.9.1:
+    resolution: {integrity: sha512-p8Yy/8sw1caA8CdRIQBG5tiLHmxtQKObCijiAa9Ez+d4+PRffM4054xbju0msf+cvhJpnFEeNjxmVT/0ipktrg==}
     dependencies:
       undici-types: 6.19.8
     dev: true

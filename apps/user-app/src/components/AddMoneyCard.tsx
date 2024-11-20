@@ -16,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
 import { razorpayAction } from "../lib/actions/rajorpayAction";
 import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const SUPPORTED_BANKS = [
   {
@@ -33,6 +35,8 @@ const SUPPORTED_BANKS = [
 ];
 
 export default function AddMoney() {
+  const { data: session } = useSession();
+
   const [redirectUrl, setRedirectUrl] = useState(
     SUPPORTED_BANKS[0]?.redirectUrl
   );
@@ -105,9 +109,24 @@ export default function AddMoney() {
           createOnrampTransaction(
             Number(amount) * 100,
             "Processing",
-            provider
+            provider,
+            response.razorpay_signature
           ).then((result) => {
             console.log("Onramp transaction created:", result);
+            axios
+              .post("/api/webhook", {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                user_identifier: session?.user?.id,
+                amount,
+              })
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
           });
         },
         theme: {
@@ -123,11 +142,14 @@ export default function AddMoney() {
           variant: "destructive",
         });
         console.error(response.error); // Handle failure response
-        createOnrampTransaction(Number(amount) * 100, "Failure", provider).then(
-          (result) => {
-            console.log("Onramp transaction failed:", result);
-          }
-        );
+        createOnrampTransaction(
+          Number(amount) * 100,
+          "Failure",
+          provider,
+          response.razorpay_signature
+        ).then((result) => {
+          console.log("Onramp transaction failed:", result);
+        });
       });
 
       razorpay.open();

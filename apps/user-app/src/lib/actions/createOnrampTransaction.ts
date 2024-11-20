@@ -6,11 +6,11 @@ import { OnRampStatus } from "@prisma/client";
 const createOnrampTransaction = async (
   amount: number,
   status: OnRampStatus,
-  provider: string
+  provider: string,
+  token: string
 ) => {
   try {
     const session = await getServerSession(authOptions);
-    const token = (Math.random() * 1000).toString();
     if (!session || !session.user || !session.user.id) {
       throw new Error("User not found");
     }
