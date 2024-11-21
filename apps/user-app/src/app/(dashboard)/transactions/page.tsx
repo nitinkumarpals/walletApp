@@ -78,7 +78,7 @@ export default function TransactionsPage() {
                 : `${t.fromUser.name} → ${t.toUser.name}`,
             status: "Completed",
           })),
-          ...onRampTransactions.map((t,index) => ({
+          ...onRampTransactions.map((t:any,index) => ({
             id: `${t.id}-${index}`,
             type: "OnRamp" as const,
             amount: t.amount,
