@@ -24,6 +24,11 @@
         "NEXTAUTH_URL"
       ]
     },
+    "@repo/db#build": {
+      "outputs": [
+        "prisma/client"
+      ]
+    },
     "lint": {
       "dependsOn": [
         "^lint"

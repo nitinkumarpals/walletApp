@@ -1,8 +1,9 @@
 {
-  "name": "web",
+  "name": "user-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "pnpm --filter=@repo/db generate",
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
