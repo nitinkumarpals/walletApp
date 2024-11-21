@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
 import { razorpayAction } from "../lib/actions/rajorpayAction";
-import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
+import createOnrampTransaction, {
+  OnRampStatus,
+} from "../lib/actions/createOnrampTransaction";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
@@ -73,7 +75,7 @@ export default function AddMoney() {
           console.log("Payment successful:", response); // Handle success response
           createOnrampTransaction(
             Number(amount) * 100,
-            "Processing",
+            OnRampStatus.Processing,
             "Razorpay",
             response.razorpay_signature
           ).then((result) => {
@@ -106,7 +108,7 @@ export default function AddMoney() {
         console.error(response.error); // Handle failure response
         createOnrampTransaction(
           Number(amount) * 100,
-          "Failure",
+          OnRampStatus.Failure,
           "Razorpay",
           response.razorpay_signature
         ).then((result) => {

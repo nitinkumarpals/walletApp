@@ -4,7 +4,7 @@ import { authOptions } from "../../app/api/auth/[...nextauth]/options";
 import prisma from "@repo/db/client";
 
 /* eslint-disable */
-enum OnRampStatus {
+export enum OnRampStatus {
   Success,
   Failure,
   Processing,
