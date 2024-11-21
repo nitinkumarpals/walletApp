@@ -67,7 +67,7 @@ export default function TransactionsPage() {
       try {
         const { p2pTransfers, onRampTransactions } = await getTransactions();
         const allTransactions: Transaction[] = [
-          ...p2pTransfers.map((t,index) => ({
+          ...p2pTransfers.map((t:any,index:any) => ({
             id: `${t.id}-${index}`, // Add prefix and index to ensure unique keys
             type: "P2P" as const,
             amount: t.amount,
@@ -78,7 +78,7 @@ export default function TransactionsPage() {
                 : `${t.fromUser.name} → ${t.toUser.name}`,
             status: "Completed",
           })),
-          ...onRampTransactions.map((t:any,index) => ({
+          ...onRampTransactions.map((t:any,index:any) => ({
             id: `${t.id}-${index}`,
             type: "OnRamp" as const,
             amount: t.amount,
@@ -163,7 +163,7 @@ export default function TransactionsPage() {
               </TableHeader>
               <TableBody>
                 {loading
-                  ? Array.from({ length: 5 }).map((_, index) => (
+                  ? Array.from({ length: 5 }).map((_, index:any) => (
                       <TableRow key={`skeleton-${index}`}>
                         <TableCell>
                           <Skeleton className="h-4 w-16" />
