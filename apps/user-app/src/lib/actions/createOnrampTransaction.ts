@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../app/api/auth/[...nextauth]/options";
 import prisma from "@repo/db/client";
-import { OnRampStatus } from "@prisma/client";
+import type { OnRampStatus } from "@prisma/client";
 const createOnrampTransaction = async (
   amount: number,
   status: OnRampStatus,
