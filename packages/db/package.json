@@ -21,7 +21,7 @@
     "prisma": "^5.22.0"
   },
   "scripts": {
-    "generate": "DATABASE_URL=postgresql://user:password@localhost:5432/dummy prisma generate",
+    "generate": "prisma generate",
     "seed": "ts-node prisma/seed.ts"
   }
 }
