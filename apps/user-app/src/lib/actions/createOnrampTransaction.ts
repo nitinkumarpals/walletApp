@@ -2,7 +2,14 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../app/api/auth/[...nextauth]/options";
 import prisma from "@repo/db/client";
-import type { OnRampStatus } from "@prisma/client";
+
+/* eslint-disable */
+enum OnRampStatus {
+  Success,
+  Failure,
+  Processing,
+}
+/* eslint-enable */
 const createOnrampTransaction = async (
   amount: number,
   status: OnRampStatus,
@@ -20,7 +27,7 @@ const createOnrampTransaction = async (
       data: {
         userId: Number(userId),
         amount,
-        status,
+        status: status as any,
         startTime: new Date(),
         provider,
         token,
