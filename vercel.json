@@ -1,0 +1,11 @@
+{
+    "builds": [
+        {
+            "src": "apps/user-app/package.json",
+            "use": "@vercel/next"
+        }
+    ],
+    "hooks": {
+        "build": "cd packages/db && pnpm generate && cd ../../apps/user-app && pnpm build"
+    }
+}
