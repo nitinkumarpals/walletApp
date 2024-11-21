@@ -2,20 +2,25 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../app/api/auth/[...nextauth]/options";
 import prisma from "@repo/db/client";
-
-const createOnrampTransaction = async (amount: number, provider: string) => {
+import { OnRampStatus } from "@prisma/client";
+const createOnrampTransaction = async (
+  amount: number,
+  status: OnRampStatus,
+  provider: string,
+  token: string
+) => {
   try {
     const session = await getServerSession(authOptions);
-    const token = (Math.random() * 1000).toString();
     if (!session || !session.user || !session.user.id) {
       throw new Error("User not found");
     }
     const userId = session?.user.id;
-    await prisma.onRampTransaction.create({
+
+    const result = await prisma.onRampTransaction.create({
       data: {
         userId: Number(userId),
         amount,
-        status: "Processing",
+        status,
         startTime: new Date(),
         provider,
         token,
@@ -24,6 +29,7 @@ const createOnrampTransaction = async (amount: number, provider: string) => {
     return {
       success: true,
       message: "Onramp transaction added successfully",
+      result,
     };
   } catch (error: unknown) {
     console.error("Error creating onramp transaction: ", error);

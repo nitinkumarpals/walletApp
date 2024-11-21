@@ -47,7 +47,7 @@ function formatAmount(amount: number) {
 }
 
 type Transaction = {
-  id: number;
+  id: string;
   type: "P2P" | "OnRamp";
   amount: number;
   date: Date;
@@ -67,8 +67,8 @@ export default function TransactionsPage() {
       try {
         const { p2pTransfers, onRampTransactions } = await getTransactions();
         const allTransactions: Transaction[] = [
-          ...p2pTransfers.map((t) => ({
-            id: t.id,
+          ...p2pTransfers.map((t,index) => ({
+            id: `${t.id}-${index}`, // Add prefix and index to ensure unique keys
             type: "P2P" as const,
             amount: t.amount,
             date: new Date(t.timestamp),
@@ -78,8 +78,8 @@ export default function TransactionsPage() {
                 : `${t.fromUser.name} → ${t.toUser.name}`,
             status: "Completed",
           })),
-          ...onRampTransactions.map((t:any) => ({
-            id: t.id,
+          ...onRampTransactions.map((t,index) => ({
+            id: `${t.id}-${index}`,
             type: "OnRamp" as const,
             amount: t.amount,
             date: new Date(t.startTime),
@@ -164,7 +164,7 @@ export default function TransactionsPage() {
               <TableBody>
                 {loading
                   ? Array.from({ length: 5 }).map((_, index) => (
-                      <TableRow key={index}>
+                      <TableRow key={`skeleton-${index}`}>
                         <TableCell>
                           <Skeleton className="h-4 w-16" />
                         </TableCell>
