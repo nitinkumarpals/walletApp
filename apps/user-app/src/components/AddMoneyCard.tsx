@@ -8,9 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
 import { razorpayAction } from "../lib/actions/rajorpayAction";
-import createOnrampTransaction, {
-  OnRampStatus,
-} from "../lib/actions/createOnrampTransaction";
+import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
+import { OnRampStatus } from "../lib/onramp-status.enum";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
