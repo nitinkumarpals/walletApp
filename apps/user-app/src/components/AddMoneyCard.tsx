@@ -37,7 +37,7 @@ export default function AddMoney() {
       document.body.appendChild(script);
     };
     loadRazorpay();
-  }, [toast]);
+  }, []);
 
   const handleAddMoney = async () => {
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
