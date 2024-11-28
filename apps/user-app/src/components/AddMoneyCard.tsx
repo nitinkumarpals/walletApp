@@ -109,7 +109,7 @@ export default function AddMoney() {
           Number(amount) * 100,
           OnRampStatus.Failure,
           "Razorpay",
-          response.razorpay_signature
+          response.error.metadata.payment_id
         ).then((result) => {
           console.log("Onramp transaction failed:", result);
         });
