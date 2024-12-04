@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getBalance } from "../transfer/page";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/options";
+import prisma from "@repo/db/client";
 import {
   ArrowUpIcon,
   ArrowDownIcon,
@@ -15,6 +16,7 @@ export default async function DashboardContent() {
   const balanceData = await getBalance();
   const balance = balanceData.amount / 100;
   const session = await getServerSession(authOptions);
+  const p2pTransferCount = await prisma.p2pTransfer.count();
 
   return (
     <div className="p-4 md:ml-36 lg:p-8 min-h-screen">
@@ -122,7 +124,7 @@ export default async function DashboardContent() {
             <RotateCcwIcon className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">23</div>
+            <div className="text-xl sm:text-2xl font-bold">{p2pTransferCount ?? 0}</div>
             <p className="text-xs text-muted-foreground">+5 from last month</p>
           </CardContent>
         </Card>
