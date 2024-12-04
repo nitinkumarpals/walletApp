@@ -1,22 +1,29 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { getBalance } from "../transfer/page"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { getBalance } from "../transfer/page";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../api/auth/[...nextauth]/options";
 import {
   ArrowUpIcon,
   ArrowDownIcon,
   RotateCcwIcon,
   TrendingUpIcon,
-} from "lucide-react"
+} from "lucide-react";
 
 export default async function DashboardContent() {
-  const balanceData = await getBalance()
-  const balance = balanceData.amount / 100
+  const balanceData = await getBalance();
+  const balance = balanceData.amount / 100;
+  const session = await getServerSession(authOptions);
 
   return (
     <div className="p-4 md:ml-36 lg:p-8 min-h-screen">
       <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-[#6a51a6]">
-        Welcome back, User!
+        Welcome back,{" "}
+        {session?.user?.name &&
+          session?.user?.name.charAt(0).toUpperCase() +
+            session?.user?.name.slice(1)}
+        !{" "}
       </h2>
 
       {/* Balance and Quick Actions */}
@@ -41,7 +48,11 @@ export default async function DashboardContent() {
                 <ArrowUpIcon className="mr-2 h-4 w-4" /> Send Money
               </Link>
             </Button>
-            <Button variant="outline" className="flex-1 text-sm sm:text-base" asChild>
+            <Button
+              variant="outline"
+              className="flex-1 text-sm sm:text-base"
+              asChild
+            >
               <Link href="/transfer">
                 <ArrowDownIcon className="mr-2 h-4 w-4" /> Add Money
               </Link>
@@ -53,7 +64,9 @@ export default async function DashboardContent() {
       {/* Recent Transactions */}
       <Card className="mb-6 sm:mb-8">
         <CardHeader>
-          <CardTitle className="text-lg sm:text-xl">Recent Transactions</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">
+            Recent Transactions
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2 text-sm sm:text-base">
@@ -128,7 +141,9 @@ export default async function DashboardContent() {
       {/* Promotions or Tips */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg sm:text-xl">Tips & Promotions</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">
+            Tips & Promotions
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm sm:text-base">
@@ -139,7 +154,7 @@ export default async function DashboardContent() {
             Refer a Friend
           </Button>
         </CardContent>
-        </Card>
+      </Card>
     </div>
-  )
+  );
 }
