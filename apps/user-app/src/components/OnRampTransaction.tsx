@@ -6,13 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from "lucide-react";
 import { getTransactions } from "../lib/actions/getTransactions";
-// eslint-disable-next-line no-unused-vars
+
 enum TransactionStatus {
-  // eslint-disable-next-line no-unused-vars
   Success = "success",
-  // eslint-disable-next-line no-unused-vars
   Failure = "failed",
-  // eslint-disable-next-line no-unused-vars
   Processing = "pending",
 }
 
@@ -86,11 +83,11 @@ export default function RecentTransactions() {
         return <Badge variant="secondary">Pending</Badge>;
     }
   };
-  
+
   return (
     <Card className="w-full">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold">
+        <CardTitle className="text-lg sm:text-xl font-bold">
           Recent Transactions
         </CardTitle>
       </CardHeader>
@@ -100,36 +97,32 @@ export default function RecentTransactions() {
             No recent transactions
           </div>
         ) : (
-          <ScrollArea className="h-[200px]">
-            <table className="w-full">
-              <thead>
-                <tr className="text-sm text-gray-500">
-                  <th className="text-left font-medium p-2">Date & Time</th>
-                  <th className="text-left font-medium p-2">Provider</th>
-                  <th className="text-right font-medium p-2">Amount</th>
-                  <th className="text-right font-medium p-2">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((t, index) => (
-                  <tr key={index} className="border-t border-gray-100">
-                    <td className="p-2 text-sm">
-                      {t.timestamp.toLocaleString()}
-                    </td>
-                    <td className="p-2 text-sm">{t.provider}</td>
-                    <td className="p-2 text-right font-semibold text-green-600">
+          <ScrollArea className="h-[300px] sm:h-[250px]">
+            <div className="space-y-4">
+              {transactions.map((t, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center mb-2 sm:mb-0">
+                    <div className="text-sm font-medium mr-4">{t.provider}</div>
+                    <div className="text-xs text-gray-500">
+                      {t.timestamp.toLocaleDateString()}{" "}
+                      {t.timestamp.toLocaleTimeString()}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto">
+                    <div className="font-semibold text-green-600 mr-4">
                       {formatCurrency(t.amount)}
-                    </td>
-                    <td className="p-2 text-right">
-                      <div className="flex items-center justify-end space-x-2">
-                        {getStatusIcon(t.status)}
-                        {getStatusBadge(t.status)}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {getStatusIcon(t.status)}
+                      {getStatusBadge(t.status)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </ScrollArea>
         )}
       </CardContent>
