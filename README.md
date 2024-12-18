@@ -1,81 +1,110 @@
-# Turborepo starter
 
-This is an official starter Turborepo.
+# 💳 WalletApp
 
-## Using this example
+WalletApp is a modern and secure web application for managing your finances. 📈 With features such as adding funds, peer-to-peer transfers, and transaction tracking, WalletApp is designed to provide a seamless user experience. ✨ The app is built with Next.js, Docker, and Express, and utilizes secure test environments for financial transactions.
 
-Run the following command:
+## 🌟 Features
 
-```sh
-npx create-turbo@latest
+### 🔐 Authentication
+
+- **Sign Up and Login Options**:
+  - 🔧 Email and Password
+  - 🔧 Username, Email, and Password
+  - 🔧 Google Sign-In
+
+### 💸 Default Balance
+
+- Upon signing in, users receive a default balance 🎯 to explore the app's features.
+
+### 💳 Add Money
+
+- Add funds using:
+  - 💳 Credit Cards
+  - 💳 Debit Cards
+  - 💺 UPI
+  - 🏦 Net Banking
+- Transactions are handled in test mode ✅ to ensure no actual money is deducted.
+- Real-time feedback on transaction status:
+  - ✅ Success: The balance is updated via a secure webhook system after a short delay. To enhance security, only the Express.js webhook server communicates directly with the database to update balances.
+  - ❌ Failure: An error message is displayed immediately.
+
+### 🤝 Peer-to-Peer Transfers
+
+- Send money to other users 🚀 by providing their email ID.
+
+### 📊 Transaction History
+
+- View a detailed log of recent transactions 📈 in the Transactions section.
+
+### 🔒 Webhook Integration
+
+- 🏦 **Bank webhook (secured and isolated)**: Handles transaction verifications and updates balances securely using Express.js. The frontend and backend in Next.js are decoupled from direct database access for enhanced security.
+
+## 🌍 Demo
+
+Check out the live application at: [WalletApp Live](https://wallet-app-navy.vercel.app) 🌟
+
+## 🚀 Installation
+
+### 🔧 Prerequisites
+
+- 🛠️ Docker (for containerized setup)
+- 🔧 Node.js and npm (for manual setup)
+- 🔧 A web browser
+
+### 🔧 Clone the Repository
+
+```bash
+git clone https://github.com/nitinkumarpals/walletApp.git
+cd walletApp
 ```
 
-## What's inside?
+### 🚧 Run with Docker
 
-This Turborepo includes the following packages/apps:
+1. Build the Docker image:
+   ```bash
+   docker build -t walletapp .
+   ```
+2. Run the Docker container:
+   ```bash
+   docker run -p 3000:3000 walletapp
+   ```
+3. Open [http://localhost:3000](http://localhost:3000) 🌐 in your browser.
 
-### Apps and Packages
+### 🏠 Run Manually
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. Open [http://localhost:3000](http://localhost:3000) 🌐 in your browser.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 🔧 Technologies Used
 
-### Utilities
+- **Frontend**: Next.js (React-based framework) 🔧
+- **Backend**: Express.js (for secure webhook handling) 🔒
+- **Database**: PostgreSQL 📊
+- **ORM**: Prisma 🔄
+- **Containerization**: Docker 🚧
+- **Hosting**: Vercel 🚀
 
-This Turborepo has some additional tools already setup for you:
+## 💪 Security
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- Transactions are processed in test mode ✅ to ensure safety.
+- Webhooks are secured with Express.js 🔒 to prevent unauthorized access.
 
-### Build
+## 🔧 Contribution
 
-To build all apps and packages, run the following command:
+Contributions are welcome! 💖 Please open an issue or submit a pull request on [GitHub](https://github.com/nitinkumarpals/walletApp).
 
-```
-cd my-turborepo
-pnpm build
-```
+## 🔒 License
 
-### Develop
+This project is licensed under the [MIT License](LICENSE).
 
-To develop all apps and packages, run the following command:
+## 🌐 Support
 
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+If you encounter any issues 🚫 or have questions ❓, feel free to open an issue on the [GitHub repository](https://github.com/nitinkumarpals/walletApp).
