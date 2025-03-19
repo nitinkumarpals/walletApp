@@ -21,7 +21,7 @@ export const Appbar = ({
         <Wallet className="h-6 w-6 text-blue-600" />
         <span className="ml-2 text-lg font-bold text-blue-800">WalletApp</span>
       </Link>
-      <div className="flex gap-2">
+      <div className="flex gap-2"> 
         {user ? (
           <Button
             onClick={onSignout}
