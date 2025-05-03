@@ -59,7 +59,7 @@ export default function AddMoney() {
     try {
       const order = await razorpayAction(Number(amount) * 100);
       const options = {
-        key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
         amount: Number(amount) * 100, // Amount in paise
         currency: "INR",
         name: "Wallet App",
