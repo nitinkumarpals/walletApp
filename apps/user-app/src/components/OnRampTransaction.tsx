@@ -7,12 +7,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from 'lucide-react';
 import { getTransactions } from '../lib/actions/getTransactions';
 
+/* eslint-disable */
 enum TransactionStatus {
   Success = 'success',
   Failure = 'failed',
   Processing = 'pending',
 }
-
+/* eslint-enable */
 interface Transaction {
   timestamp: Date;
   amount: number;

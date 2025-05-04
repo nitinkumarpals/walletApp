@@ -1,4 +1,3 @@
-import { SidebarItem } from "../../components/SidebarItem";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";

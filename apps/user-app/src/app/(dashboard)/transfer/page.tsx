@@ -1,7 +1,4 @@
 import prisma from '@repo/db/client';
-import AddMoney from '../../../components/AddMoneyCard';
-import { BalanceCard } from '../../../components/BalanceCard';
-import OnRampTransactions from '../../../components/OnRampTransaction';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/options';
 import TransferUI from './TransferUI';

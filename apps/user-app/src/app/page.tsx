@@ -8,7 +8,6 @@ import Security from "@/components/security";
 import FAQ from "@/components/faq";
 import CTA from "@/components/cta";
 import Footer from "@/components/footer";
-import { AppbarClient } from "../components/AppbarClient";
 import Navbar from "@/components/appbar";
 function LandingPage() {
   return (
