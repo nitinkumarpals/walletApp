@@ -21,7 +21,8 @@
         "RAZORPAY_KEY_ID",
         "RAZORPAY_KEY_SECRET",
         "DATABASE_URL",
-        "NEXTAUTH_URL"
+        "NEXTAUTH_URL",
+        "NEXT_PUBLIC_RAZORPAY_KEY_ID"
       ]
     },
     "@repo/db#build": {
