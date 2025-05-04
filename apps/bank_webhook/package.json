@@ -5,8 +5,8 @@
     "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
-    "@repo/db": "*",
-    "@repo/schemas": "*",
+    "@repo/db": "workspace:*",
+    "@repo/schemas": "workspace:*",
     "hono": "^4.5.11",
     "razorpay": "^2.9.5"
   },
