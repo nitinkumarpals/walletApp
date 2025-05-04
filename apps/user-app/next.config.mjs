@@ -7,7 +7,7 @@ const nextConfig = {
         destination: "https://bank_webhook.gtthreeone.workers.dev/webhook",
       },
     ];
-  },
+  }
 };
 
 export default nextConfig;
