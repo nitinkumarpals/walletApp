@@ -12,7 +12,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import ClientForm from "@/src/components/ClientForm";
- function LandingPage() {
+function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <main className="flex-1">
