@@ -1,5 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LockIcon, UnlockIcon, WalletIcon } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { LockIcon, UnlockIcon, WalletIcon } from 'lucide-react';
 
 interface BalanceCardProps {
   amount: number;
@@ -8,9 +9,9 @@ interface BalanceCardProps {
 
 export const BalanceCard = ({ amount, locked }: BalanceCardProps) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
       minimumFractionDigits: 2,
     }).format(value / 100);
   };
@@ -18,7 +19,7 @@ export const BalanceCard = ({ amount, locked }: BalanceCardProps) => {
   const totalBalance = amount + locked;
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-2xl font-bold flex items-center">
           <WalletIcon className="mr-2 h-6 w-6" />
@@ -29,8 +30,9 @@ export const BalanceCard = ({ amount, locked }: BalanceCardProps) => {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <div className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
-              <UnlockIcon className="mr-2 h-4 w-4" />
-              Unlocked Balance
+              {/* <UnlockIcon className="mr-2 h-4 w-4" /> */}
+              <Icon icon={'mingcute:bank-fill'} className="mr-2 h-4 w-4" />
+              Available Balance
             </div>
             <div className="text-lg font-semibold">
               {formatCurrency(amount)}
@@ -44,7 +46,7 @@ export const BalanceCard = ({ amount, locked }: BalanceCardProps) => {
           </div>
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex justify-between items-center">
             <div className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
               <LockIcon className="mr-2 h-4 w-4" />
@@ -60,7 +62,7 @@ export const BalanceCard = ({ amount, locked }: BalanceCardProps) => {
               style={{ width: `${(locked / totalBalance) * 100}%` }}
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
