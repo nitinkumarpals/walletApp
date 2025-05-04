@@ -56,13 +56,14 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
       });
       return;
     }
+    const paisaAmount = Number(amount) * 100;
     try {
       const order = await razorpayAction(Number(amount) * 100);
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
-        amount: Number(amount) * 100, // Amount in paise
+        amount: paisaAmount, // Amount in paise
         currency: "INR",
-        name: "Wallet App",
+        name: "NimbleWallet",
         description: "Add Money Transaction",
         image: "https://example.com/your_logo", // Optional logo URL
         order_id: order.order?.id, // Replace with order ID from your server
@@ -73,7 +74,7 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
           });
           console.log("Payment successful:", response); // Handle success response
           createOnrampTransaction(
-            Number(amount) * 100,
+            paisaAmount,
             OnRampStatus.Processing,
             "Razorpay",
             response.razorpay_signature
@@ -85,7 +86,7 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 user_identifier: session?.user?.id,
-                amount,
+                amount: paisaAmount.toString(),
               })
               .then(() => {
                 refresh();
@@ -109,7 +110,7 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
         });
         console.error(response.error); // Handle failure response
         createOnrampTransaction(
-          Number(amount) * 100,
+          paisaAmount,
           OnRampStatus.Failure,
           "Razorpay",
           response.error.metadata.payment_id
@@ -129,7 +130,7 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card>
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Add Money</CardTitle>
       </CardHeader>

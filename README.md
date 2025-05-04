@@ -1,7 +1,6 @@
+# 💳 NimbleWallet
 
-# 💳 WalletApp
-
-WalletApp is a modern and secure web application for managing your finances. 📈 With features such as adding funds, peer-to-peer transfers, and transaction tracking, WalletApp is designed to provide a seamless user experience. ✨ The app is built with Next.js, Docker, and Express, and utilizes secure test environments for financial transactions.
+NimbleWallet is a modern and secure web application for managing your finances. 📈 With features such as adding funds, peer-to-peer transfers, and transaction tracking, NimbleWallet is designed to provide a seamless user experience. ✨ The app is built with Next.js, Docker, and Express, and utilizes secure test environments for financial transactions.
 
 ## 🌟 Features
 
@@ -42,7 +41,7 @@ WalletApp is a modern and secure web application for managing your finances. �
 
 ## 🌍 Demo
 
-Check out the live application at: [WalletApp Live](https://wallet-app-navy.vercel.app) 🌟
+Check out the live application at: [NimbleWallet Live](https://wallet-app-navy.vercel.app) 🌟
 
 ## 🚀 Installation
 
@@ -55,19 +54,19 @@ Check out the live application at: [WalletApp Live](https://wallet-app-navy.verc
 ### 🔧 Clone the Repository
 
 ```bash
-git clone https://github.com/nitinkumarpals/walletApp.git
-cd walletApp
+git clone https://github.com/nitinkumarpals/NimbleWallet.git
+cd NimbleWallet
 ```
 
 ### 🚧 Run with Docker
 
 1. Build the Docker image:
    ```bash
-   docker build -t walletapp .
+   docker build -t NimbleWallet .
    ```
 2. Run the Docker container:
    ```bash
-   docker run -p 3000:3000 walletapp
+   docker run -p 3000:3000 NimbleWallet
    ```
 3. Open [http://localhost:3000](http://localhost:3000) 🌐 in your browser.
 
@@ -99,7 +98,7 @@ cd walletApp
 
 ## 🔧 Contribution
 
-Contributions are welcome! 💖 Please open an issue or submit a pull request on [GitHub](https://github.com/nitinkumarpals/walletApp).
+Contributions are welcome! 💖 Please open an issue or submit a pull request on [GitHub](https://github.com/nitinkumarpals/NimbleWallet).
 
 ## 🔒 License
 
@@ -107,4 +106,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 🌐 Support
 
-If you encounter any issues 🚫 or have questions ❓, feel free to open an issue on the [GitHub repository](https://github.com/nitinkumarpals/walletApp).
+If you encounter any issues 🚫 or have questions ❓, feel free to open an issue on the [GitHub repository](https://github.com/nitinkumarpals/NimbleWallet).

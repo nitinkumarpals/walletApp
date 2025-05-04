@@ -183,7 +183,7 @@ export function SendCard() {
             </Form>
           </CardContent>
           <CardFooter className="text-sm text-center text-gray-500">
-            Secure transactions powered by WalletApp
+            Secure transactions powered by NimbleWallet
           </CardFooter>
         </Card>
       </div>

@@ -35,7 +35,7 @@ export default function ClientForm() {
       name: "",
       email: "",
       password: "",
-      number: "",
+      number: undefined,
     },
   });
 

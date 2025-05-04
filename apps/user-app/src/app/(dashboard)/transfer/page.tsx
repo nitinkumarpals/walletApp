@@ -25,19 +25,5 @@ export default async function () {
   // const balance = await getBalance();
   return (
     <TransferUI />
-    // <div className="container mx-auto py-10">
-    //   <h1 className="text-4xl font-bold mb-8 text-[#6a51a6]">Transfer</h1>
-    //   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
-    //     <div>
-    //       <AddMoney />
-    //     </div>
-    //     <div>
-    //       <BalanceCard amount={balance.amount} locked={balance.locked} />
-    //       <div className="pt-4">
-    //         <OnRampTransactions />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
