@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "ISC",
   "devDependencies": {
-    "@repo/typescript-config": "*",
+    "@repo/typescript-config": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.5.4",
     "ts-node": "^10.9.2",
