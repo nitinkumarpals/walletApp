@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from "lucide-react";
-import { getTransactions } from "../lib/actions/getTransactions";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from 'lucide-react';
+import { getTransactions } from '../lib/actions/getTransactions';
 
 enum TransactionStatus {
-  Success = "success",
-  Failure = "failed",
-  Processing = "pending",
+  Success = 'success',
+  Failure = 'failed',
+  Processing = 'pending',
 }
 
 interface Transaction {
@@ -18,10 +18,10 @@ interface Transaction {
   amount: number;
   status: TransactionStatus;
   provider: string;
-  type: "onRamp";
+  type: 'onRamp';
 }
 
-export default function RecentTransactions() {
+export default function RecentTransactions({ reload }: { reload: Boolean }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
@@ -33,13 +33,13 @@ export default function RecentTransactions() {
             timestamp: new Date(t.startTime),
             amount: t.amount,
             status:
-              t.status === "Success"
+              t.status === 'Success'
                 ? TransactionStatus.Success
-                : t.status === "Failure"
+                : t.status === 'Failure'
                   ? TransactionStatus.Failure
                   : TransactionStatus.Processing,
             provider: t.provider,
-            type: "onRamp" as const,
+            type: 'onRamp' as const,
           }));
 
         combinedTransactions.sort(
@@ -47,17 +47,17 @@ export default function RecentTransactions() {
         );
         setTransactions(combinedTransactions.slice(0, 5)); // Get only the 5 most recent transactions
       } catch (error) {
-        console.error("Failed to fetch transactions:", error);
+        console.error('Failed to fetch transactions:', error);
       }
     }
 
     fetchTransactions();
-  }, []);
+  }, [reload]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
       minimumFractionDigits: 2,
     }).format(amount / 100);
   };
@@ -107,7 +107,7 @@ export default function RecentTransactions() {
                   <div className="flex flex-col sm:flex-row sm:items-center mb-2 sm:mb-0">
                     <div className="text-sm font-medium mr-4">{t.provider}</div>
                     <div className="text-xs text-gray-500">
-                      {t.timestamp.toLocaleDateString()}{" "}
+                      {t.timestamp.toLocaleDateString()}{' '}
                       {t.timestamp.toLocaleTimeString()}
                     </div>
                   </div>

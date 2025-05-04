@@ -13,7 +13,7 @@ import { OnRampStatus } from '../lib/onramp-status.enum';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
-export default function AddMoney() {
+export default function AddMoney({ refresh }: { refresh: () => void }) {
   const { data: session } = useSession();
 
   const [amount, setAmount] = useState('');
@@ -88,6 +88,9 @@ export default function AddMoney() {
                 user_identifier: session?.user?.id,
                 amount: paisaAmount.toString(),
               })
+              .then(() => {
+                refresh();
+              })
               .catch((error) => {
                 console.error(error);
               });
@@ -146,7 +149,7 @@ export default function AddMoney() {
             />
           </div>
         </div>
-        <Button onClick={handleAddMoney} className="w-full">
+        <Button onClick={handleAddMoney} className="w-full rounded-lg">
           Add Money
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>

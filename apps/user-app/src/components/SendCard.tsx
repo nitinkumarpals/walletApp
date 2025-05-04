@@ -157,14 +157,14 @@ export function SendCard() {
                     type="button"
                     variant="outline"
                     onClick={() => form.reset()}
-                    className="w-[48%]"
+                    className="w-[48%]  rounded-lg"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-[48%]"
+                    className="w-[48%]  rounded-lg"
                   >
                     {isLoading ? (
                       <>
