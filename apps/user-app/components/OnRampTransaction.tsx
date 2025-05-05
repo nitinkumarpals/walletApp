@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from "lucide-react";
 import { getTransactions } from "../src/lib/actions/getTransactions";
+import { Skeleton } from "./ui/skeleton";
 
 /* eslint-disable */
 enum TransactionStatus {
@@ -24,6 +25,7 @@ interface Transaction {
 
 export default function RecentTransactions({ reload }: { reload: Boolean }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTransactions() {
@@ -46,9 +48,11 @@ export default function RecentTransactions({ reload }: { reload: Boolean }) {
         combinedTransactions.sort(
           (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
         );
-        setTransactions(combinedTransactions.slice(0, 5)); // Get only the 5 most recent transactions
+        setTransactions(combinedTransactions.slice(0, 5));
+        setLoading(false); // Get only the 5 most recent transactions
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
+        setLoading(false);
       }
     }
 
@@ -93,9 +97,12 @@ export default function RecentTransactions({ reload }: { reload: Boolean }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {transactions.length === 0 ? (
-          <div className="text-center py-4 text-gray-500">
-            No recent transactions
+        {loading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-12 bg-gray-100" />
+            <Skeleton className="h-12 bg-gray-100" />
+            <Skeleton className="h-12 bg-gray-100" />
+            <Skeleton className="h-12 bg-gray-100" />
           </div>
         ) : (
           <ScrollArea className="h-[300px] sm:h-[250px]">
