@@ -82,7 +82,7 @@ export function SendCard() {
 
   return (
     <div className="flex flex-col md:flex-row gap-10">
-      <div className="w-full md:w-1/2">
+      <div className="hidden w-full md:w-1/2 sm:block">
         <Image
           src="/images/p2p.jpg"
           alt="Send Money"

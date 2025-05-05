@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "NimbleWallet",
-  description: "",
+  description: "A secure and easy to use wallet",
 };
 
 export default async function RootLayout({
@@ -16,6 +16,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+      <link rel="icon" href="/favicon.ico" />
+      </head>
       <Providers>
         <body className="bg-gray-100 dark:bg-gray-900">
           <div>{children}</div>
