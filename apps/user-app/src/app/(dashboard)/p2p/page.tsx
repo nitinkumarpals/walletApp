@@ -1,5 +1,5 @@
 import React from "react";
-import { SendCard } from "../../../components/SendCard";
+import { SendCard } from "../../../../components/SendCard";
 
 const page = () => {
   return (

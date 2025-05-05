@@ -1,9 +1,9 @@
-'use client';
-import AddMoney from '@/src/components/AddMoneyCard';
-import { BalanceCard } from '@/src/components/BalanceCard';
-import React, { useEffect } from 'react';
-import OnRampTransactions from '../../../components/OnRampTransaction';
-import { getBalance } from './action';
+"use client";
+import AddMoney from "@/components/AddMoneyCard";
+import { BalanceCard } from "@/components/BalanceCard";
+import React, { useEffect } from "react";
+import OnRampTransactions from "../../../../components/OnRampTransaction";
+import { getBalance } from "./action";
 
 export default function TransferUI() {
   const [reload, setReload] = React.useState<Boolean>(false);

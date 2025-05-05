@@ -1,6 +1,6 @@
 "use client";
 
-import ClientForm from "@/src/components/ClientForm";
+import ClientForm from "@/components/ClientForm";
 
 const login = () => {
   return (

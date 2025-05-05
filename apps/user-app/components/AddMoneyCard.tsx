@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CreditCard, ArrowRight } from "lucide-react";
-import { razorpayAction } from "../lib/actions/rajorpayAction";
-import createOnrampTransaction from "../lib/actions/createOnrampTransaction";
-import { OnRampStatus } from "../lib/onramp-status.enum";
+import { razorpayAction } from "../src/lib/actions/rajorpayAction";
+import createOnrampTransaction from "../src/lib/actions/createOnrampTransaction";
+import { OnRampStatus } from "../src/lib/onramp-status.enum";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
