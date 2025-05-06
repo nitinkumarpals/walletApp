@@ -54,10 +54,15 @@ const Footer: React.FC = () => {
           </p>
 
           <div className="flex space-x-6">
-            <SocialLink href="#" icon="twitter" />
-            <SocialLink href="#" icon="facebook" />
-            <SocialLink href="#" icon="instagram" />
-            <SocialLink href="#" icon="linkedin" />
+            <SocialLink href="https://x.com/nitinkumarpals" icon="twitter" />
+            <SocialLink
+              href="https://github.com/nitinkumarpals/walletApp"
+              icon="github"
+            />
+            <SocialLink
+              href="https://www.linkedin.com/in/nitinkumarpals/"
+              icon="linkedin"
+            />
           </div>
         </div>
       </div>
@@ -106,7 +111,7 @@ const SocialLink: React.FC<{ href: string; icon: string }> = ({
           />
         </svg>
       )}
-      {icon === "facebook" && (
+      {icon === "github" && (
         <svg
           width="20"
           height="20"
@@ -115,38 +120,7 @@ const SocialLink: React.FC<{ href: string; icon: string }> = ({
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
-      {icon === "instagram" && (
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M16 11.37C16.1234 12.2022 15.9813 13.0522 15.5938 13.799C15.2063 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.9079 12.2384 16.0396 11.4078 15.9059C10.5771 15.7723 9.80976 15.3801 9.21484 14.7852C8.61991 14.1902 8.22773 13.4229 8.09406 12.5922C7.9604 11.7615 8.09206 10.9099 8.47032 10.1584C8.84858 9.40685 9.45418 8.79374 10.201 8.40624C10.9478 8.01874 11.7978 7.87658 12.63 8C13.4789 8.12588 14.2648 8.52146 14.8717 9.1283C15.4785 9.73515 15.8741 10.5211 16 11.37Z"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M17.5 6.5H17.51"
+            d="M12 2C6.48 2 2 6.48 2 12C2 16.42 5.07 20.17 9.26 21.5C9.81 21.58 10 21.27 10 21V18.88C6.73 19.54 6.14 17.34 6.14 17.34C5.68 16.05 5 15.7 5 15.7C4.09 15.07 5.07 15.09 5.07 15.09C6.07 15.17 6.58 16.13 6.58 16.13C7.46 17.64 8.91 17.2 9.5 16.91C9.58 16.24 9.84 15.77 10.13 15.5C7.73 15.22 5.25 14.29 5.25 10.78C5.25 9.77 5.63 8.97 6.24 8.36C6.15 8.09 5.82 6.96 6.33 5.43C6.33 5.43 7.1 5.17 10 6.89C10.94 6.63 11.97 6.5 13 6.5C14.03 6.5 15.06 6.63 16 6.89C18.9 5.17 19.67 5.43 19.67 5.43C20.18 6.96 19.85 8.09 19.76 8.36C20.37 8.97 20.75 9.77 20.75 10.78C20.75 14.3 18.27 15.22 15.87 15.5C16.26 15.87 16.61 16.58 16.61 17.64V21C16.61 21.27 16.8 21.59 17.35 21.5C21.53 20.17 24.6 16.42 24.6 12C24.6 6.48 20.12 2 14.6 2H12Z"
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
