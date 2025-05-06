@@ -10,12 +10,14 @@ const createOnrampTransaction = async (
   token: string
 ) => {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions); 
     if (!session || !session.user || !session.user.id) {
       throw new Error("User not found");
     }
     const userId = session?.user.id;
-
+    if(amount <= 0){
+      throw new Error("Amount must be greater than 0");
+    }
     const result = await prisma.onRampTransaction.create({
       data: {
         userId: Number(userId),
