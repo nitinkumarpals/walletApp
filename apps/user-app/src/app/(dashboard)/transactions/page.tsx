@@ -1,97 +1,80 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { getTransactions } from "@/src/lib/actions/getTransactions";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Search, TrendingUp, TrendingDown, Loader2 } from "lucide-react";
+import StatusPill from "@/components/status-pill";
+import { cn } from "@/src/lib/utils";
+import axios from "axios";
+import { useAuth } from "@/src/lib/auth-context";
+
+function inr(amount: number) {
+  return amount.toLocaleString("en-IN", { style: "currency", currency: "INR" });
+}
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
-  }).format(date);
-}
-
-function formatAmount(amount: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "INR",
-  }).format(amount / 100);
+  }).format(date).toLowerCase();
 }
 
 type Transaction = {
   id: string;
-  type: "P2P" | "OnRamp";
+  type: "P2P" | "OnRamp" | "Transfer";
   amount: number;
   date: Date;
   details: string;
   status: string;
+  direction: "in" | "out";
 };
 
-export default function TransactionsPage() {
+const FILTERS = ["all", "onramp", "p2p", "transfer"] as const;
+type Filter = typeof FILTERS[number];
+
+export default function Transactions() {
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const { p2pTransfers, onRampTransactions } = await getTransactions();
+        const { data } = await axios.get("http://localhost:3001/transactions", { withCredentials: true });
+        const { p2pTransfers, onRampTransactions } = data;
+        
         const allTransactions: Transaction[] = [
-          ...p2pTransfers.map((t: any, index: any) => ({
-            id: `${t.id}-${index}`, // Add prefix and index to ensure unique keys
-            type: "P2P" as const,
-            amount: t.amount,
-            date: new Date(t.timestamp),
-            details:
-              t.fromUserId === t.toUserId
-                ? "Self Transfer"
-                : `${t.fromUser.name} → ${t.toUser.name}`,
-            status: "Completed",
-          })),
+          ...p2pTransfers.map((t: any, index: any) => {
+            const isOut = t.fromUserId === Number(user?.id);
+            return {
+              id: `${t.id}-${index}-p2p`,
+              type: "P2P" as const,
+              amount: t.amount / 100,
+              date: new Date(t.timestamp),
+              details: isOut ? `sent to ${t.toUser.name || t.toUser.email}` : `received from ${t.fromUser.name || t.fromUser.email}`,
+              status: "completed",
+              direction: isOut ? "out" : "in",
+            };
+          }),
           ...onRampTransactions.map((t: any, index: any) => ({
-            id: `${t.id}-${index}`,
+            id: `${t.id}-${index}-ramp`,
             type: "OnRamp" as const,
-            amount: t.amount,
+            amount: t.amount / 100,
             date: new Date(t.startTime),
-            details: t.provider,
-            status: t.status,
+            details: `added via ${t.provider}`,
+            status: t.status.toLowerCase(),
+            direction: "in" as const,
           })),
         ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
         setTransactions(allTransactions);
-        setLoading(false);
       } catch (err) {
-        setError("Failed to fetch transactions. Please try again later.");
+        console.error("Failed to fetch transactions");
+      } finally {
         setLoading(false);
       }
     }
@@ -99,127 +82,106 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, []);
 
-  const filteredTransactions = transactions.filter(
-    (t) =>
-      (filter === "all" || t.type === filter) &&
-      (t.details.toLowerCase().includes(search.toLowerCase()) ||
-        t.status.toLowerCase().includes(search.toLowerCase()))
-  );
+  const filtered = transactions.filter((t) => {
+    const matchQ =
+      search.length === 0 ||
+      t.details.toLowerCase().includes(search.toLowerCase()) ||
+      t.type.toLowerCase().includes(search.toLowerCase());
+    const matchF = filter === "all" || t.type.toLowerCase() === filter;
+    return matchQ && matchF;
+  });
 
   return (
-    <div>
-      <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-[#6a51a6]">
-        Transactions
-      </h1>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl sm:text-2xl">
-            Your Transactions
-          </CardTitle>
-          <CardDescription>
-            A list of all your P2P transfers and on-ramp transactions.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-4">
-            <div className="flex-1">
-              <Label htmlFor="search" className="mb-1 block">
-                Search
-              </Label>
-              <Input
-                id="search"
-                placeholder="Search transactions..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full"
-              />
-            </div>
-            <div className="w-full sm:w-auto">
-              <Label htmlFor="filter" className="mb-1 block">
-                Filter
-              </Label>
-              <Select value={filter} onValueChange={setFilter}>
-                <SelectTrigger id="filter" className="w-full">
-                  <SelectValue placeholder="Filter transactions" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Transactions</SelectItem>
-                  <SelectItem value="P2P">P2P Transfers</SelectItem>
-                  <SelectItem value="OnRamp">On-Ramp Transactions</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+    <>
+      <div className="mb-10">
+        <div className="label-mono mb-3">// ledger</div>
+        <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">transactions.</h1>
+        <p className="text-muted-foreground mt-3 mono text-sm">
+          every p2p transfer and on-ramp, in one stream.
+        </p>
+      </div>
+
+      <div className="tile p-0 overflow-hidden">
+        <div className="p-5 md:p-6 border-b border-border flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+          <div className="relative w-full md:max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="search txns…"
+              className="w-full h-10 pl-10 pr-3 rounded-lg bg-surface-2 border border-border mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-lime/60 transition-colors"
+            />
           </div>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead className="hidden sm:table-cell">Date</TableHead>
-                  <TableHead>Details</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading
-                  ? Array.from({ length: 5 }).map((_, index: any) => (
-                      <TableRow key={`skeleton-${index}`}>
-                        <TableCell>
-                          <Skeleton className="h-4 w-16" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4 w-24" />
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Skeleton className="h-4 w-32" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4 w-40" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-6 w-20" />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  : filteredTransactions.map((transaction) => (
-                      <TableRow key={transaction.id}>
-                        <TableCell>{transaction.type}</TableCell>
-                        <TableCell>
-                          {formatAmount(transaction.amount)}
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          {formatDate(transaction.date)}
-                        </TableCell>
-                        <TableCell>{transaction.details}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              transaction.status.toLowerCase() === "completed"
-                                ? "default"
-                                : transaction.status.toLowerCase() === "success"
-                                  ? "success"
-                                  : "secondary"
-                            }
-                          >
-                            {transaction.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-              </TableBody>
-            </Table>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {FILTERS.map((x) => (
+              <button
+                key={x}
+                onClick={() => setFilter(x)}
+                className={cn(
+                  "mono text-[12px] px-3 py-1.5 rounded-full border transition-colors",
+                  filter === x
+                    ? "bg-lime text-background border-lime"
+                    : "border-border text-muted-foreground hover:text-foreground",
+                )}
+              >
+                [ {x} ]
+              </button>
+            ))}
           </div>
-          {!loading && filteredTransactions.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              No transactions found.
-            </div>
-          )}
-          {error && (
-            <div className="text-red-500 text-center mt-4">{error}</div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+
+        <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 label-mono border-b border-border bg-surface/50">
+          <div className="col-span-2">type</div>
+          <div className="col-span-3">amount</div>
+          <div className="col-span-3">date</div>
+          <div className="col-span-2">details</div>
+          <div className="col-span-2 text-right">status</div>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-6 w-6 animate-spin text-lime" />
+          </div>
+        ) : (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
+            className="divide-y divide-border"
+          >
+            {filtered.length === 0 ? (
+              <div className="p-10 text-center">
+                <div className="label-mono">// no transactions match</div>
+              </div>
+            ) : (
+              filtered.map((t) => (
+                <motion.div
+                  key={t.id}
+                  variants={{ hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0 } }}
+                  className="grid grid-cols-2 md:grid-cols-12 gap-4 px-6 py-4 hover:bg-surface-2/60 transition-colors items-center"
+                >
+                  <div className="md:col-span-2 flex items-center gap-2 mono text-sm text-foreground">
+                    {t.direction === "in" ? (
+                      <TrendingDown className="h-3.5 w-3.5 text-lime rotate-180" />
+                    ) : (
+                      <TrendingUp className="h-3.5 w-3.5 text-destructive rotate-180" />
+                    )}
+                    {t.type}
+                  </div>
+                  <div className={cn("md:col-span-3 num text-sm", t.direction === "in" ? "text-lime" : "text-foreground")}>
+                    {t.direction === "in" ? "+" : "−"}{inr(t.amount)}
+                  </div>
+                  <div className="md:col-span-3 mono text-xs text-muted-foreground">{formatDate(t.date)}</div>
+                  <div className="md:col-span-2 mono text-xs text-foreground truncate">{t.details}</div>
+                  <div className="md:col-span-2 md:text-right flex md:justify-end">
+                    <StatusPill status={t.status} />
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </motion.div>
+        )}
+      </div>
+    </>
   );
 }

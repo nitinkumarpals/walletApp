@@ -2,7 +2,9 @@
   "name": "bank_webhook",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
@@ -11,8 +13,11 @@
     "razorpay": "^2.9.5"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.18.4",
     "@cloudflare/workers-types": "^4.20240903.0",
     "@types/node": "^22.9.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "vitest": "^4.1.10",
     "wrangler": "^3.57.2"
   }
 }

@@ -1,178 +1,133 @@
 "use client";
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Zap, Globe } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import React, { useRef } from "react";
+import Link from "next/link";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
 const Hero: React.FC = () => {
-  return (
-    <div className="relative overflow-hidden py-20 md:py-32 px-4 md:px-8">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(108,92,231,0.3),rgba(255,255,255,0))]"></div>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 overflow-hidden"
-      >
-        <div className="absolute left-[40%] top-0 h-[1000px] w-[1000px] rounded-full bg-wallet-purple opacity-5 blur-3xl"></div>
-        <div className="absolute right-[30%] top-[40%] h-[800px] w-[800px] rounded-full bg-wallet-blue opacity-5 blur-3xl"></div>
-      </div>
+  const wrap = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 120, damping: 20 });
+  const sy = useSpring(my, { stiffness: 120, damping: 20 });
+  const bg = useTransform([sx, sy], ([x, y]) =>
+    `radial-gradient(500px circle at ${x}px ${y}px, hsl(var(--lime) / 0.18), transparent 60%)`
+  );
 
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-24">
+  const onMove = (e: React.MouseEvent) => {
+    const r = wrap.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set(e.clientX - r.left);
+    my.set(e.clientY - r.top);
+  };
+
+  return (
+    <section
+      ref={wrap}
+      onMouseMove={onMove}
+      className="relative overflow-hidden border-b border-border"
+    >
+      <motion.div aria-hidden style={{ background: bg }} className="absolute inset-0 -z-10" />
+      <div className="absolute inset-0 -z-10 dotgrid opacity-60" />
+
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-16 md:pt-24 pb-20 md:pb-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-end">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="md:w-1/2 space-y-8"
+            className="lg:col-span-7"
           >
-            <div className="inline-block">
-              <span className="px-4 py-2 rounded-full bg-wallet-purple/10 text-wallet-purple text-sm font-semibold mb-6 flex items-center gap-2">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-wallet-purple opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-wallet-purple"></span>
-                </span>
-                New Feature: Instant Cross-Border Payments
-              </span>
+            <div className="flex items-center gap-3 label-mono mb-8">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-lime animate-ticker" />
+              <span>// v2.6 · sept 2026</span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold !leading-tight">
-              Banking for the{" "}
-              <span className="gradient-text">digital world</span>
+            <h1 className="mono font-medium text-foreground text-[44px] sm:text-6xl lg:text-[88px] leading-[0.95] tracking-tight">
+              move money at the<br />
+              <span className="gradient-text">speed of thought.</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-lg">
-              Send, receive, and manage your money with unprecedented ease and
-              security. No borders, no limits, just seamless financial freedom.
+
+            <p className="mt-8 max-w-xl text-base md:text-lg text-muted-foreground">
+              Nimble is a wallet built for 2026. Send across borders, receive on any rail, top up
+              from cards, banks, or UPI — all in one dark, tight, mono-fine surface.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/login">
-              <Button
-                size="lg"
-                className="bg-wallet-purple hover:bg-wallet-dark-purple text-white rounded-xl px-8 h-14 text-lg"
-              >
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-wallet-purple text-wallet-purple hover:bg-wallet-light-purple rounded-xl px-8 h-14 text-lg"
-                onClick={() =>
-                  window.open(
-                    "https://github.com/nitinkumarpals/walletApp",
-                    "_blank"
-                  )
-                }
-              >
-                See How It Works
-              </Button>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <Link href="/login" className="btn-lime">
+                open account <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <a href="#features" className="btn-ghost">see the product</a>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6 pt-6">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-wallet-green/10 flex items-center justify-center">
-                  <ShieldCheck className="h-5 w-5 text-wallet-green" />
-                </div>
-                <span className="text-sm text-gray-600">
-                  Bank-level Security
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-wallet-blue/10 flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-wallet-blue" />
-                </div>
-                <span className="text-sm text-gray-600">Instant Transfers</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-wallet-purple/10 flex items-center justify-center">
-                  <Globe className="h-5 w-5 text-wallet-purple" />
-                </div>
-                <span className="text-sm text-gray-600">Global Coverage</span>
-              </div>
+            <div className="mt-10 flex items-center gap-3 border border-border rounded-full px-4 py-2 w-fit bg-surface/60 backdrop-blur">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-lime opacity-70 animate-ping" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />
+              </span>
+              <span className="mono text-[12px] text-foreground/80">
+                <span className="num">2,481</span> transfers in last 60s
+              </span>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="md:w-1/2 relative"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="lg:col-span-5 relative"
           >
-            <div className="absolute -inset-1 bg-gradient-to-r from-wallet-purple via-wallet-blue to-wallet-pink rounded-3xl opacity-30 blur-xl"></div>
-            <div className="relative bg-white dark:bg-gray-900 p-2 md:p-4 rounded-3xl shadow-2xl">
-              <div className="aspect-[5/3] overflow-hidden rounded-2xl">
-                <Image
-                  src="/images/coin.jpg"
-                  alt="Digital Wallet Interface"
-                  width={1200}
-                  height={720}
-                  className="w-full h-full object-cover rounded-2xl"
-                />
+            <div className="tile p-6 md:p-8">
+              <div className="flex items-center justify-between">
+                <span className="label-mono">// wallet</span>
+                <span className="label-mono">USD · primary</span>
               </div>
-
-              <div className="absolute -bottom-10 -right-10 bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-xl animate-float">
-                <div className="flex items-center gap-4 p-2">
-                  <div className="w-12 h-12 bg-gradient-to-br from-wallet-purple to-wallet-blue rounded-xl flex items-center justify-center text-white">
-                    <CheckIcon />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Payment Completed</p>
-                    <p className="font-bold text-lg">$3,659.00</p>
-                  </div>
+              <div className="mt-8">
+                <div className="label-mono">available</div>
+                <div className="num text-5xl md:text-6xl mt-2 text-foreground">$48,204.<span className="text-muted-foreground">72</span></div>
+                <div className="mt-2 label-mono flex items-center gap-2">
+                  <span className="text-lime">▲ 12.7%</span>
+                  <span>this month</span>
                 </div>
               </div>
-
-              <div
-                className="absolute -top-10 -left-10 bg-white dark:bg-gray-900 p-3 rounded-2xl shadow-xl animate-float"
-                style={{ animationDelay: "1.5s" }}
-              >
-                <div className="flex items-center gap-3 p-1">
-                  <div className="h-8 w-8 bg-wallet-green/20 rounded-lg flex items-center justify-center">
-                    <Zap className="h-4 w-4 text-wallet-green" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium">+12.7%</p>
-                  </div>
-                </div>
+              <div className="mt-8 h-px bg-border" />
+              <div className="mt-6 space-y-3">
+                <Row t="Salary · Nova Labs" a="+$8,400.00" pos />
+                <Row t="FX · USD → EUR" a="−€1,200.00" />
+                <Row t="Card · Figma" a="−$15.00" />
               </div>
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="absolute -bottom-6 -left-4 md:-left-10 tile px-4 py-3 flex items-center gap-3"
+            >
+              <span className="h-2 w-2 rounded-full bg-lime" />
+              <span className="mono text-[12px] text-foreground/80">payment received · <span className="num">+$3,659.00</span></span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.75 }}
+              className="absolute -top-4 -right-2 md:-right-6 tile px-4 py-3 mono text-[12px] text-foreground/80"
+            >
+              FX spread · <span className="num text-lime">0.12%</span>
+            </motion.div>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-24 flex justify-center"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
-            <StatsCard number="10M+" label="Active Users" />
-            <StatsCard number="100+" label="Countries" />
-            <StatsCard number="$50B+" label="Transactions" />
-            <StatsCard number="99.99%" label="Uptime" />
-          </div>
-        </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 
-const CheckIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
+const Row: React.FC<{ t: string; a: string; pos?: boolean }> = ({ t, a, pos }) => (
+  <div className="flex items-center justify-between mono text-[13px]">
+    <span className="text-muted-foreground">{t}</span>
+    <span className={pos ? "text-lime num" : "text-foreground num"}>{a}</span>
+  </div>
 );
-
-const StatsCard: React.FC<{number: string; label: string}> = ({ number, label }) => {
-  return (
-    <div className="text-center">
-      <p className="text-3xl md:text-4xl font-bold mb-1 gradient-text">{number}</p>
-      <p className="text-gray-600">{label}</p>
-    </div>
-  );
-};
 
 export default Hero;

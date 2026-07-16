@@ -1,8 +1,11 @@
-export const TextInput = ({ placeholder,onChange,label }: { 
+interface TextInputProps {
   placeholder: string;
+  // eslint-disable-next-line no-unused-vars
   onChange: (value: string) => void;
-  label: string
- }) => {
+  label: string;
+}
+
+export const TextInput = ({ placeholder, onChange, label }: TextInputProps) => {
   return (
     <div className="pt-2">
         <label className="block mb-2 text-sm font-medium text-gray-900">{label}</label>

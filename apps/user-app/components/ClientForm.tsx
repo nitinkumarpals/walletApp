@@ -2,12 +2,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Wallet, Loader2 } from "lucide-react";
+import { Wallet, Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 import {
   Form,
   FormControl,
@@ -44,36 +44,24 @@ export default function ClientForm() {
 
     if (isLogin) {
       try {
-        const result = await signIn("credentials", {
-          redirect: false,
-          email: data.email,
-          password: data.password,
-        });
+        const response = await axios.post(
+          "http://localhost:3001/auth/login",
+          { email: data.email, password: data.password },
+          { withCredentials: true }
+        );
 
-        if (result?.error) {
-          toast({
-            title: "Login Failed",
-            description:
-              result.error === "CredentialsSignin"
-                ? "Incorrect username or password"
-                : result.error === "User password is null"
-                  ? "No password found. Use Google or reset your password."
-                  : result.error,
-            variant: "destructive",
-          });
-        }
-
-        if (result?.url) {
+        if (response.data.success) {
           toast({
             title: "Success",
             description: "Login Successful",
           });
-          router.replace("/dashboard");
+          router.push("/dashboard");
+          router.refresh();
         }
       } catch (error) {
         toast({
-          title: "Error",
-          description: "Login failed. Please try again.",
+          title: "Login Failed",
+          description: "Incorrect email or password",
           variant: "destructive",
         });
       } finally {
@@ -81,14 +69,17 @@ export default function ClientForm() {
       }
     } else {
       try {
-        const response = await axios.post("/api/sign-up", data);
+        const response = await axios.post("http://localhost:3001/auth/sign-up", data, {
+          withCredentials: true,
+        });
 
         if (response.data.success) {
           toast({
             title: "Success",
             description: "Signup successful",
           });
-          setIsLogin(true);
+          router.push("/dashboard");
+          router.refresh();
         }
       } catch (error) {
         toast({
@@ -106,33 +97,31 @@ export default function ClientForm() {
   };
 
   const handleGoogleAuth = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+    window.location.assign("http://localhost:3001/auth/google");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-wallet-light-purple/30">
-      <div className="max-w-md mx-auto pt-16 pb-24 px-4">
-        <div className="mb-8 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-wallet-purple to-wallet-blue rounded-md opacity-20 blur-sm"></div>
-              <Wallet size={36} className="relative text-wallet-purple" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold">NimbleWallet</h1>
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 dotgrid opacity-50" />
+      <div className="absolute inset-x-0 top-0 h-[500px] blur-3xl -z-10 bg-[radial-gradient(ellipse_at_top,hsl(var(--ion)/0.18),transparent_60%)]" />
+
+      <div className="max-w-md mx-auto pt-10 pb-24 px-4">
+        <Link href="/" className="inline-flex items-center gap-2 label-mono mb-10 hover:text-lime">
+          <ArrowLeft className="h-3.5 w-3.5" /> back to home
+        </Link>
+
+        <div className="mb-8">
+          <div className="mono text-lg mb-2">nimble<span className="text-lime">/</span></div>
+          <div className="label-mono mb-6">// {isLogin ? "sign in" : "create account"}</div>
+          <h1 className="mono text-3xl md:text-4xl leading-[1] tracking-tight">
+            {isLogin ? "welcome back." : "let's get you set up."}
+          </h1>
+          <p className="text-muted-foreground mt-3 text-sm">
+            {isLogin ? "Sign in to your Nimble account." : "Two minutes. No card required."}
+          </p>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl shadow-lg">
-          <div className="space-y-2 mb-6">
-            <h2 className="text-2xl font-bold text-wallet-dark-purple">
-              {isLogin ? "Welcome Back" : "Create Your Account"}
-            </h2>
-            <p className="text-gray-600">
-              {isLogin
-                ? "Sign in to access your account"
-                : "Start managing your finances in minutes"}
-            </p>
-          </div>
+        <div className="tile p-7">
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -142,106 +131,95 @@ export default function ClientForm() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel className="label-mono">username</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          className="border-gray-300 focus:border-wallet-purple"
-                        />
+                        <Input {...field} className="bg-surface-2 border-border h-11 mono" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               )}
-
+              
               {!isLogin && (
                 <FormField
                   control={form.control}
                   name="number"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number (optional)</FormLabel>
+                      <FormLabel className="label-mono">phone (optional)</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          className="border-gray-300 focus:border-wallet-purple"
-                        />
+                        <Input {...field} className="bg-surface-2 border-border h-11 mono" />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
               )}
-
+              
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="label-mono">email</FormLabel>
                     <FormControl>
                       <Input
-                        type="email"
                         {...field}
-                        className="border-gray-300 focus:border-wallet-purple"
+                        type="email"
+                        className="bg-surface-2 border-border h-11 mono"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
+              
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="label-mono">password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
+                        className="bg-surface-2 border-border h-11 mono"
                         {...field}
-                        className="border-gray-300 focus:border-wallet-purple"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
+              
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-wallet-purple text-white hover:bg-wallet-dark-purple"
+                className="w-full h-11 rounded-full bg-lime text-background hover:brightness-110 mono"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Loading...
+                    loading…
                   </div>
                 ) : (
-                  <>{isLogin ? "Login" : "Sign Up"}</>
+                  <>{isLogin ? "sign in →" : "create account →"}</>
                 )}
               </Button>
             </form>
           </Form>
-
-          <div className="relative my-4">
+          
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-gray-600">Or</span>
+              <span className="bg-surface px-2 label-mono">or</span>
             </div>
           </div>
-
-          <Button
-            onClick={handleGoogleAuth}
-            variant="outline"
-            className="w-full"
-          >
-            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+          
+          <Button onClick={handleGoogleAuth} variant="outline" className="w-full h-11 rounded-full bg-surface-2 border-border hover:border-lime/60 mono text-foreground relative z-10">
+            <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"
@@ -260,16 +238,16 @@ export default function ClientForm() {
               />
               <path d="M1 1h22v22H1z" fill="none" />
             </svg>
-            Continue with Google
+            continue with google
           </Button>
-
-          <div className="text-center text-sm text-gray-600 mt-4">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          
+          <div className="text-center label-mono mt-6 relative z-10">
+            {isLogin ? "no account yet?" : "already onboard?"}{" "}
             <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="font-medium text-wallet-purple hover:underline"
+              onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); }}
+              className="text-lime hover:underline mono"
             >
-              {isLogin ? "Sign up here" : "Login here"}
+              {isLogin ? "sign up →" : "sign in →"}
             </button>
           </div>
         </div>

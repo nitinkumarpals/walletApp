@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowDownIcon, ArrowUpIcon, ClockIcon } from "lucide-react";
-import { getTransactions } from "../src/lib/actions/getTransactions";
-import { Skeleton } from "./ui/skeleton";
+import BentoTile from "@/components/bento-tile";
+import StatusPill from "@/components/status-pill";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
 
 /* eslint-disable */
 enum TransactionStatus {
@@ -16,6 +14,7 @@ enum TransactionStatus {
 }
 /* eslint-enable */
 interface Transaction {
+  id: string;
   timestamp: Date;
   amount: number;
   status: TransactionStatus;
@@ -23,16 +22,30 @@ interface Transaction {
   type: "onRamp";
 }
 
-export default function RecentTransactions({ reload }: { reload: Boolean }) {
+function inr(amount: number) {
+  return amount.toLocaleString("en-IN", { style: "currency", currency: "INR" });
+}
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  }).format(date).toLowerCase();
+}
+
+export default function RecentTransactions({ reload }: { reload: boolean }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const result = await getTransactions();
+        const { data: result } = await axios.get("http://localhost:3001/transactions", { withCredentials: true });
         const combinedTransactions: Transaction[] =
-          result.onRampTransactions.map((t: any) => ({
+          result.onRampTransactions.map((t: any, idx: number) => ({
+            id: `onramp-${idx}`,
             timestamp: new Date(t.startTime),
             amount: t.amount,
             status:
@@ -49,9 +62,9 @@ export default function RecentTransactions({ reload }: { reload: Boolean }) {
           (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
         );
         setTransactions(combinedTransactions.slice(0, 5));
-        setLoading(false); // Get only the 5 most recent transactions
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
+      } finally {
         setLoading(false);
       }
     }
@@ -59,81 +72,34 @@ export default function RecentTransactions({ reload }: { reload: Boolean }) {
     fetchTransactions();
   }, [reload]);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      minimumFractionDigits: 2,
-    }).format(amount / 100);
-  };
-
-  const getStatusIcon = (status: TransactionStatus) => {
-    switch (status) {
-      case TransactionStatus.Success:
-        return <ArrowDownIcon className="h-4 w-4 text-green-500" />;
-      case TransactionStatus.Failure:
-        return <ArrowUpIcon className="h-4 w-4 text-red-500" />;
-      case TransactionStatus.Processing:
-        return <ClockIcon className="h-4 w-4 text-yellow-500" />;
-    }
-  };
-
-  const getStatusBadge = (status: TransactionStatus) => {
-    switch (status) {
-      case TransactionStatus.Success:
-        return <Badge variant="default">Success</Badge>;
-      case TransactionStatus.Failure:
-        return <Badge variant="destructive">Failed</Badge>;
-      case TransactionStatus.Processing:
-        return <Badge variant="secondary">Pending</Badge>;
-    }
-  };
-
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg sm:text-xl font-bold">
-          Recent Transactions
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <BentoTile label="[03] recent">
+      <div className="mt-2 divide-y divide-border">
         {loading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-12 bg-gray-100" />
-            <Skeleton className="h-12 bg-gray-100" />
-            <Skeleton className="h-12 bg-gray-100" />
-            <Skeleton className="h-12 bg-gray-100" />
+          <div className="flex justify-center py-8">
+            <Loader2 className="h-5 w-5 animate-spin text-lime" />
           </div>
+        ) : transactions.length === 0 ? (
+           <div className="py-8 text-center mono text-sm text-muted-foreground">
+             no recent transactions.
+           </div>
         ) : (
-          <ScrollArea className="h-[300px] sm:h-[250px]">
-            <div className="space-y-4">
-              {transactions.map((t, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center mb-2 sm:mb-0">
-                    <div className="text-sm font-medium mr-4">{t.provider}</div>
-                    <div className="text-xs text-gray-500">
-                      {t.timestamp.toLocaleDateString()}{" "}
-                      {t.timestamp.toLocaleTimeString()}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto">
-                    <div className="font-semibold text-green-600 mr-4">
-                      {formatCurrency(t.amount)}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {getStatusIcon(t.status)}
-                      {getStatusBadge(t.status)}
-                    </div>
-                  </div>
+          transactions.map((t) => (
+            <div key={t.id} className="flex items-center justify-between py-3">
+              <div>
+                <div className="mono text-sm text-foreground">added via {t.provider}</div>
+                <div className="label-mono">{t.type} · {formatDate(t.timestamp)}</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="num text-sm text-lime">
+                  +{inr(t.amount / 100)}
                 </div>
-              ))}
+                <StatusPill status={t.status} />
+              </div>
             </div>
-          </ScrollArea>
+          ))
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </BentoTile>
   );
 }

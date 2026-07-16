@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Wallet, ChevronDown } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -22,134 +23,100 @@ const Navbar: React.FC = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 z-50 w-full transition-all duration-300 px-4 md:px-8 ${
-          isScrolled
-            ? "py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-sm"
-            : "py-6"
-        }`}
+        className={cn(
+          "fixed top-0 z-50 w-full transition-all duration-300 px-4 md:px-8 border-b border-transparent",
+          isScrolled ? "py-4 bg-background/60 backdrop-blur-xl border-border" : "py-6"
+        )}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-wallet-purple to-wallet-blue rounded-md opacity-20 blur-sm"></div>
-              <Wallet size={28} className="relative text-wallet-purple" />
+          
+          {/* Left: Wordmark */}
+          <Link href="/">
+            <div className="flex items-center gap-1 font-mono text-xl tracking-tight text-fg hover:text-accent transition-colors">
+              <span className="font-bold">nimble</span>
+              <span className="text-accent">/</span>
             </div>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="font-bold text-xl"
-            >
-              NimbleWallet
-            </motion.span>
+          </Link>
+
+          {/* Center: Links */}
+          <div className="hidden lg:flex items-center space-x-8">
+            <NavItem label="features" href="#features" />
+            <NavItem label="pricing" href="#pricing" />
+            <NavItem label="docs" href="#docs" />
           </div>
 
-          <div className="hidden lg:flex items-center space-x-1">
-            <NavItem label="Features" href="#features" />
-            <NavItem label="How it works" href="#how-it-works" hasDropdown />
-            <NavItem label="Security" href="#security" />
-            <NavItem label="FAQ" href="#faq" />
-          </div>
-
+          {/* Right: Actions */}
           <div className="hidden lg:flex items-center space-x-4">
             <Link href="/login">
               <Button
                 variant="ghost"
-                className="text-sm hover:text-wallet-purple hover:bg-wallet-purple/5"
+                className="font-mono text-sm tracking-tight text-muted hover:text-fg hover:bg-surface-2"
               >
-                Log in
+                [ log in ]
               </Button>
             </Link>
             <Link href="/login">
-              <Button className="bg-wallet-purple hover:bg-wallet-dark-purple text-white rounded-xl">
-                Get Started
+              <Button className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 font-mono text-sm tracking-tight px-6">
+                connect <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
 
+          {/* Mobile Toggle */}
           <button
-            className="lg:hidden flex items-center justify-center h-10 w-10 rounded-xl bg-wallet-purple/5 text-wallet-purple"
+            className="lg:hidden flex items-center justify-center h-10 w-10 text-fg"
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
           >
-            <Menu size={20} />
+            <Menu size={24} />
           </button>
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-50 bg-white dark:bg-gray-900"
+            className="fixed inset-0 z-50 bg-background"
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             <div className="h-full flex flex-col">
-              <div className="py-6 px-4 md:px-8 flex items-center justify-between border-b">
-                <div className="flex items-center gap-2">
-                  <Wallet size={28} className="text-wallet-purple" />
-                  <span className="font-bold text-xl">NimbleWallet</span>
+              <div className="py-6 px-4 md:px-8 flex items-center justify-between border-b border-border">
+                <div className="flex items-center gap-1 font-mono text-xl tracking-tight text-fg">
+                  <span className="font-bold">nimble</span>
+                  <span className="text-accent">/</span>
                 </div>
                 <button
-                  className="flex items-center justify-center h-10 w-10 rounded-xl bg-wallet-purple/5 text-wallet-purple"
+                  className="flex items-center justify-center h-10 w-10 text-fg"
                   onClick={() => setIsMobileMenuOpen(false)}
                   aria-label="Close menu"
                 >
-                  <X size={20} />
+                  <X size={24} />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-auto py-8 px-4 md:px-8">
+              <div className="flex-1 py-8 px-4 md:px-8">
                 <div className="space-y-6">
-                  <MobileNavItem
-                    label="Features"
-                    href="#features"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  />
-                  <MobileNavItem
-                    label="How it works"
-                    href="#how-it-works"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  />
-                  <MobileNavItem
-                    label="Security"
-                    href="#security"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  />
-                  <MobileNavItem
-                    label="FAQ"
-                    href="#faq"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  />
+                  <MobileNavItem label="features" href="#features" onClick={() => setIsMobileMenuOpen(false)} />
+                  <MobileNavItem label="pricing" href="#pricing" onClick={() => setIsMobileMenuOpen(false)} />
+                  <MobileNavItem label="docs" href="#docs" onClick={() => setIsMobileMenuOpen(false)} />
                 </div>
               </div>
 
-              <div className="py-6 px-4 md:px-8 border-t">
-                <div className="grid grid-cols-2 gap-4">
-                  <Link
-                    href="/login"
-                    className="w-full"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Button
-                      variant="outline"
-                      className="w-full border-wallet-purple text-wallet-purple hover:bg-wallet-purple/5"
-                    >
-                      Log in
-                    </Button>
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="w-full"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Button className="w-full bg-wallet-purple hover:bg-wallet-dark-purple text-white">
-                      Get Started
-                    </Button>
-                  </Link>
-                </div>
+              <div className="py-6 px-4 md:px-8 border-t border-border space-y-4">
+                <Link href="/login" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full font-mono tracking-tight bg-surface border-border text-fg hover:bg-surface-2 hover:border-accent">
+                    [ log in ]
+                  </Button>
+                </Link>
+                <Link href="/login" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90 font-mono tracking-tight">
+                    connect <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </motion.div>
@@ -159,37 +126,22 @@ const Navbar: React.FC = () => {
   );
 };
 
-const NavItem: React.FC<{
-  label: string;
-  href: string;
-  hasDropdown?: boolean;
-}> = ({ label, href, hasDropdown = false }) => {
+const NavItem: React.FC<{ label: string; href: string }> = ({ label, href }) => {
   return (
     <a
       href={href}
-      className="relative px-4 py-2 rounded-xl text-gray-600 hover:text-wallet-purple hover:bg-wallet-purple/5 transition-colors group"
+      className="font-mono text-sm tracking-tight text-muted hover:text-accent transition-colors"
     >
-      <span className="flex items-center gap-1">
-        {label}
-        {hasDropdown && (
-          <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-wallet-purple transition-colors" />
-        )}
-      </span>
-
-      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-wallet-purple group-hover:w-[calc(100%-16px)] transition-all duration-300"></span>
+      {label}
     </a>
   );
 };
 
-const MobileNavItem: React.FC<{
-  label: string;
-  href: string;
-  onClick: () => void;
-}> = ({ label, href, onClick }) => {
+const MobileNavItem: React.FC<{ label: string; href: string; onClick: () => void }> = ({ label, href, onClick }) => {
   return (
     <a
       href={href}
-      className="block px-2 py-4 text-xl font-medium border-b border-gray-100 dark:border-gray-800"
+      className="block text-2xl font-mono tracking-tight text-muted hover:text-accent border-b border-border/50 pb-4"
       onClick={onClick}
     >
       {label}

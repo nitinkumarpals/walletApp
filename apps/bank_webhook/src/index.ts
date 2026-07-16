@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { webHookSchema } from "@repo/schemas/hdfcWebHookSchema";
 import { getPrisma } from "@repo/db/accelerate";
 // Function to compute HMAC SHA-256
-async function hmacSha256(key: any, data: any) {
+export async function hmacSha256(key: any, data: any) {
   if (!key || key.length === 0) {
     throw new Error("HMAC key must not be empty");
   }
@@ -34,6 +34,9 @@ const app = new Hono<{
     userId: string;
   };
 }>();
+
+import { cors } from 'hono/cors';
+app.use('/*', cors({ origin: '*' }));
 //check if this request actually come from hdfc bank, use a webhook secret here
 app.post("/webhook", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
@@ -73,7 +76,7 @@ app.post("/webhook", async (c) => {
       }),
       prisma.onRampTransaction.update({
         where: {
-          token: razorpay_signature,
+          token: razorpay_order_id,
         },
         data: {
           status: "Success",

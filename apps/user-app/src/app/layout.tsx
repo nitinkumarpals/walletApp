@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
+import { Work_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "../../provider";
 import { Toaster } from "@/components/ui/toaster";
 
+const workSans = Work_Sans({ 
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
+
 export const metadata: Metadata = {
-  title: "NimbleWallet",
-  description: "A secure and easy to use wallet",
+  title: "NimbleWallet — Move Money at the Speed of Thought",
+  description: "Next-generation fintech wallet with obsidian neon aesthetics.",
 };
 
 export default async function RootLayout({
@@ -15,12 +26,12 @@ export default async function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
       <link rel="icon" href="/favicon.ico" />
       </head>
       <Providers>
-        <body className="bg-gray-100 dark:bg-gray-900">
+        <body className={`${workSans.variable} ${jetbrainsMono.variable}`}>
           <div>{children}</div>
           <Toaster />
         </body>

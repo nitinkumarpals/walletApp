@@ -1,6 +1,6 @@
+export const dynamic = 'force-dynamic';
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/options";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "@/src/lib/getServerSession";
 import LayoutUI from "./layout-ui";
 
 export default async function Layout({
@@ -8,7 +8,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }): Promise<JSX.Element> {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
   if (!session) {
     redirect("/");
   }

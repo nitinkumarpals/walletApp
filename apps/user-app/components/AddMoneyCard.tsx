@@ -2,27 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CreditCard, ArrowRight } from "lucide-react";
-import { razorpayAction } from "../src/lib/actions/rajorpayAction";
-import createOnrampTransaction from "../src/lib/actions/createOnrampTransaction";
-import { OnRampStatus } from "../src/lib/onramp-status.enum";
+import BentoTile from "@/components/bento-tile";
+import { ArrowRight, Loader2 } from "lucide-react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/src/lib/auth-context";
+
+// @ts-ignore
+enum OnRampStatus {
+  Success = "Success",
+  Failure = "Failure",
+  Processing = "Processing",
+}
+
+const CHIPS = [500, 1000, 5000, 10000];
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_WEBHOOK_URL || "http://localhost:8787";
 
 export default function AddMoney({ refresh }: { refresh: () => void }) {
-  const { data: session } = useSession();
-
+  const { user } = useAuth();
   const [amount, setAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
 
   useEffect(() => {
     const loadRazorpay = () => {
-      if (document.getElementById("razorpay-script")) return; // Avoid loading the script multiple times
+      if (document.getElementById("razorpay-script")) {
+        setRazorpayLoaded(true);
+        return;
+      }
       const script = document.createElement("script");
       script.id = "razorpay-script";
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -39,7 +46,8 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
     loadRazorpay();
   }, []);
 
-  const handleAddMoney = async () => {
+  const handleAddMoney = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
       toast({
         title: "Invalid Amount",
@@ -56,49 +64,52 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
       });
       return;
     }
+    
+    setIsLoading(true);
     const paisaAmount = Number(amount) * 100;
     try {
-      const order = await razorpayAction(Number(amount) * 100);
+      const { data: orderRes } = await axios.post("http://localhost:3001/onramp/razorpay", { amount: paisaAmount }, { withCredentials: true });
+      const order = orderRes.order;
+
+      await axios.post("http://localhost:3001/onramp/create", {
+        amount: paisaAmount,
+        status: OnRampStatus.Processing,
+        provider: "Razorpay",
+        token: order.id
+      }, { withCredentials: true });
+
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Replace with your Razorpay key ID
-        amount: paisaAmount, // Amount in paise
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: paisaAmount,
         currency: "INR",
         name: "NimbleWallet",
-        description: "Add Money Transaction",
-        image: "https://example.com/your_logo", // Optional logo URL
-        order_id: order.order?.id, // Replace with order ID from your server
-        handler: (response: any) => {
-          toast({
-            title: "Payment Successful",
-            description: `Payment ID: ${response.razorpay_payment_id}`,
-          });
-          console.log("Payment successful:", response); // Handle success response
-          createOnrampTransaction(
-            paisaAmount,
-            OnRampStatus.Processing,
-            "Razorpay",
-            response.razorpay_signature
-          ).then((result) => {
-            console.log("Onramp transaction created:", result);
-            axios
-              .post("/api/webhook", {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                user_identifier: session?.user?.id,
-                amount: paisaAmount.toString(),
-              })
-              .then(() => {
-                refresh();
-              })
-              .catch((error) => {
-                console.error(error);
+        description: "Add Money to Wallet",
+        order_id: order?.id,
+        handler: async (response: any) => {
+          try {
+            const res = await axios.post(`${WEBHOOK_URL}/webhook`, {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              user_identifier: String(user?.id),
+              amount: paisaAmount.toString(),
+            });
+            if (res.status === 200) {
+              toast({
+                title: "Payment Successful",
+                description: `₹${amount} added to your wallet.`,
               });
-          });
+              refresh();
+              setAmount("");
+            } else {
+              toast({ title: "Payment Verification Failed", description: "Please contact support.", variant: "destructive" });
+            }
+          } catch (error) {
+            toast({ title: "Payment Verification Failed", description: "Signature mismatch or server error.", variant: "destructive" });
+          }
         },
-        theme: {
-          color: "#3399cc",
-        },
+        theme: { color: "#C7FF3D" },
+        modal: { backdropclose: false },
       };
 
       const razorpay = new (window as any).Razorpay(options);
@@ -108,15 +119,12 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
           description: response.error.description,
           variant: "destructive",
         });
-        console.error(response.error); // Handle failure response
-        createOnrampTransaction(
-          paisaAmount,
-          OnRampStatus.Failure,
-          "Razorpay",
-          response.error.metadata.payment_id
-        ).then((result) => {
-          console.log("Onramp transaction failed:", result);
-        });
+        axios.post("http://localhost:3001/onramp/create", {
+          amount: paisaAmount,
+          status: OnRampStatus.Failure,
+          provider: "Razorpay",
+          token: response.error.metadata.payment_id
+        }, { withCredentials: true });
       });
 
       razorpay.open();
@@ -126,34 +134,52 @@ export default function AddMoney({ refresh }: { refresh: () => void }) {
         description: "An error occurred while processing your request.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">Add Money</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="amount">Amount</Label>
-          <div className="relative">
-            <CreditCard className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-            <Input
-              id="amount"
-              type="number"
-              placeholder="Enter amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+    <BentoTile label="[01] add money">
+      <form onSubmit={handleAddMoney} className="mt-2">
+
+        <label className="label-mono">amount</label>
+        <div className="mt-2 flex items-center rounded-lg border border-border bg-surface-2 focus-within:border-lime/60 transition-colors">
+          <span className="px-4 num text-2xl text-muted-foreground">₹</span>
+          <input
+            value={amount}
+            onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
+            placeholder="0.00"
+            required
+            className="flex-1 bg-transparent num text-2xl text-foreground py-4 pr-4 focus:outline-none placeholder:text-muted-foreground"
+          />
         </div>
-        <Button onClick={handleAddMoney} className="w-full rounded-lg">
-          Add Money
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </CardContent>
-    </Card>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {CHIPS.map((c) => (
+            <button
+              type="button"
+              key={c}
+              onClick={() => setAmount(String(c))}
+              className="mono text-[12px] px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:text-lime hover:border-lime/60"
+            >
+              ₹{c.toLocaleString("en-IN")}
+            </button>
+          ))}
+        </div>
+
+        <button type="submit" disabled={isLoading} className="btn-lime w-full justify-center mt-8 disabled:opacity-50">
+          {isLoading ? (
+            <><Loader2 className="h-4 w-4 animate-spin mr-2" /> processing</>
+          ) : (
+            <>add money <ArrowRight className="h-4 w-4 ml-2" /></>
+          )}
+        </button>
+
+        <div className="label-mono mt-5">
+          powered by razorpay · instant · fee 0.00%
+        </div>
+      </form>
+    </BentoTile>
   );
 }

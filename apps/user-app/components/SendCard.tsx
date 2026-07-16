@@ -16,8 +16,8 @@ import { sendFormSchema } from "@repo/schemas/sendFormSchema";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { p2pTransfer } from "../src/lib/actions/p2pTransfer";
 import { Loader2, Send } from "lucide-react";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -44,10 +44,12 @@ export function SendCard() {
   const onSubmit = async (values: z.infer<typeof sendFormSchema>) => {
     setIsLoading(true);
     try {
-      const result = await p2pTransfer(
-        values.email,
-        Math.floor(Number(values.amount) * 100)
-      );
+      const response = await axios.post("http://localhost:3001/transfer/p2p", {
+        email: values.email,
+        amount: Math.floor(Number(values.amount) * 100),
+      }, { withCredentials: true });
+
+      const result = response.data;
       if (result && result.message) {
         if (result.message === "Transfer successful") {
           toast({
@@ -69,10 +71,10 @@ export function SendCard() {
           });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to send money. Please try again.",
+        description: error.response?.data?.message || "Failed to send money. Please try again.",
         variant: "destructive",
       });
     } finally {
