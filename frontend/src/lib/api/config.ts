@@ -21,10 +21,10 @@ export const API_PATHS = {
   depositHistory: "/deposit/history",
   razorpayWebhook: "/webhooks/razorpay",
   // transfer
-  transfer: "/transfer/p2p",
+  transfer: "/transfer/send",
   // activity / reporting
   statement: "/activity",
-  p2pCount: "/activity/p2p-count",
-  p2pRecipients: "/activity/p2p-recipients",
+  transferCount: "/activity/transfer-count",
+  recipients: "/activity/recipients",
   analytics: "/activity/analytics",
 } as const;

@@ -24,7 +24,7 @@ Package root `com.nimblewallet.wallet`. Each sub-package is a module; boundaries
 | `ledger` | **sole writer of balances**; `credit`/`transfer` with pessimistic lock; `/balance` |
 | `payment` | Razorpay anti-corruption layer: order creation + signature verification |
 | `deposit` | Razorpay "add money": order + idempotent capture → ledger credit; `/deposit/*`, `/webhooks/razorpay` |
-| `transfer` | peer-to-peer transfers via ledger; `/transfer/p2p` |
+| `transfer` | peer-to-peer transfers via ledger; `/transfer/send` |
 | `activity` | read/reporting: statement, counts, recipients, 30-day analytics; `/activity/*` |
 
 Money is stored as **minor units (paise), `BIGINT`**. Deposit status: `PENDING | COMPLETED | FAILED`.

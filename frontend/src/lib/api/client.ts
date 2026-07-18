@@ -90,6 +90,6 @@ export const transferApi = {
 
 export const walletApi = {
   balance: () => apiRequest<BalanceResponse>(API_PATHS.balance),
-  recipients: () => apiRequest<Recipient[]>(API_PATHS.p2pRecipients),
+  recipients: () => apiRequest<Recipient[]>(API_PATHS.recipients),
   statement: () => apiRequest<StatementResponse>(API_PATHS.statement),
 };

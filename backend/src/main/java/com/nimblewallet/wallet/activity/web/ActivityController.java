@@ -29,12 +29,12 @@ public class ActivityController {
         return activity.statement(user.id());
     }
 
-    @GetMapping("/p2p-count")
+    @GetMapping("/transfer-count")
     public long peerTransferCount(@AuthenticationPrincipal AuthenticatedUser user) {
         return activity.peerTransferCount(user.id());
     }
 
-    @GetMapping("/p2p-recipients")
+    @GetMapping("/recipients")
     public List<RecipientView> recentRecipients(@AuthenticationPrincipal AuthenticatedUser user) {
         return activity.recentRecipients(user.id());
     }

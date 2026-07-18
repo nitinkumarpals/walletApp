@@ -30,7 +30,7 @@ cp src/main/resources/application-local.yml.example src/main/resources/applicati
 
 `com.nimblewallet.wallet.*` — boundaries enforced by `ModularityTests`:
 
-`authentication` · `user` · `ledger` (sole balance writer) · `deposit` (Razorpay add-money) · `payment` (Razorpay gateway + signature) · `transfer` (p2p) · `activity` (reporting) · `shared`.
+`authentication` · `user` · `ledger` (sole balance writer) · `deposit` (Razorpay add-money) · `payment` (Razorpay gateway + signature) · `transfer` (peer-to-peer) · `activity` (reporting) · `shared`.
 
 Money is stored as minor units (paise, `BIGINT`); the DB schema is owned by **Flyway** (`db/migration`), Hibernate is `validate`-only.
 

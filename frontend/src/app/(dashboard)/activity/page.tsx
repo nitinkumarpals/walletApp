@@ -22,7 +22,7 @@ function formatDate(date: Date) {
 
 type Transaction = {
   id: string;
-  type: "P2P" | "OnRamp" | "Transfer";
+  type: "Transfer" | "Deposit";
   amount: number;
   date: Date;
   details: string;
@@ -30,7 +30,7 @@ type Transaction = {
   direction: "in" | "out";
 };
 
-const FILTERS = ["all", "onramp", "p2p", "transfer"] as const;
+const FILTERS = ["all", "transfer", "deposit"] as const;
 type Filter = typeof FILTERS[number];
 
 export default function ActivityPage() {
@@ -46,8 +46,8 @@ export default function ActivityPage() {
 
         const allTransactions: Transaction[] = [
           ...transfers.map((t, index) => ({
-            id: `${t.id}-${index}-p2p`,
-            type: "P2P" as const,
+            id: `${t.id}-${index}-transfer`,
+            type: "Transfer" as const,
             amount: t.amountMinor / 100,
             date: new Date(t.createdAt),
             details:
@@ -58,8 +58,8 @@ export default function ActivityPage() {
             direction: (t.direction === "OUT" ? "out" : "in") as "in" | "out",
           })),
           ...deposits.map((t, index) => ({
-            id: `${t.orderToken}-${index}-ramp`,
-            type: "OnRamp" as const,
+            id: `${t.orderToken}-${index}-deposit`,
+            type: "Deposit" as const,
             amount: t.amountMinor / 100,
             date: new Date(t.createdAt),
             details: `added via ${t.paymentMethod || "Razorpay"}`,
@@ -94,7 +94,7 @@ export default function ActivityPage() {
         <div className="label-mono mb-3">// ledger</div>
         <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">transactions.</h1>
         <p className="text-muted-foreground mt-3 mono text-sm">
-          every p2p transfer and on-ramp, in one stream.
+          every transfer and deposit, in one stream.
         </p>
       </div>
 

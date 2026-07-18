@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the current session from NestJS backend on load
+    // Fetch the current session from the backend on load
     const fetchUser = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}${API_PATHS.me}`, {

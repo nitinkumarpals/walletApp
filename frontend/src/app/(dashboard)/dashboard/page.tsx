@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   const balance = (balanceData?.amount ?? 0) / 100;
   
   const session = await getServerSession();
-  const p2pTransferCount = await serverApi.p2pCount();
+  const transferCount = await serverApi.transferCount();
 
   const analytics = await serverApi.analytics();
   const analyticsData = analytics
@@ -47,12 +47,12 @@ export default async function DashboardPage() {
     else totalReceived += t.amountMinor / 100;
 
     allTxns.push({
-      id: `p2p-${t.id}`,
+      id: `transfer-${t.id}`,
       direction: isOut ? "out" : "in",
       details: isOut
         ? `Sent to ${t.counterpartyName || t.counterpartyEmail}`
         : `Received from ${t.counterpartyName || t.counterpartyEmail}`,
-      type: "P2P",
+      type: "Transfer",
       date: new Date(t.createdAt).toLocaleDateString(),
       amount: t.amountMinor / 100,
       timestamp: new Date(t.createdAt).getTime(),
@@ -63,10 +63,10 @@ export default async function DashboardPage() {
     if (t.status === "COMPLETED") {
       totalReceived += t.amountMinor / 100;
       allTxns.push({
-        id: `onramp-${t.orderToken}`,
+        id: `deposit-${t.orderToken}`,
         direction: "in",
         details: `Top up via ${t.paymentMethod || "Razorpay"}`,
-        type: "OnRamp",
+        type: "Deposit",
         date: new Date(t.createdAt).toLocaleDateString(),
         amount: t.amountMinor / 100,
         timestamp: new Date(t.createdAt).getTime(),
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
 
         <StatCell label="total spent" value={inr(totalSpent)} delta="lifetime" dir="down" />
         <StatCell label="total received" value={inr(totalReceived)} delta="lifetime" dir="up" />
-        <StatCell label="p2p transfers" value={String(p2pTransferCount)} delta="completed" dir="up" />
+        <StatCell label="transfers" value={String(transferCount)} delta="completed" dir="up" />
         <StatCell label="net flow" value={inr(totalReceived - totalSpent)} delta="30 days" dir={totalReceived >= totalSpent ? "up" : "down"} />
 
         <div className="md:col-span-6">

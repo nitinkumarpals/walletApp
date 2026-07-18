@@ -25,7 +25,7 @@ const menuData = [
     link: "/add-money",
   },
   {
-    name: "p2p transfer",
+    name: "send money",
     icon: Send,
     link: "/send",
   },

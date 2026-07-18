@@ -69,7 +69,7 @@ export default function SendPage() {
     <>
       <div className="mb-10">
         <div className="label-mono mb-3">// send</div>
-        <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">p2p transfer.</h1>
+        <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">send money.</h1>
         <p className="text-muted-foreground mt-3 mono text-sm">
           move money to any nimble handle. instant. no spread.
         </p>

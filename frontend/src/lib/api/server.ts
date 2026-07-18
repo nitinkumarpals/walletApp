@@ -35,10 +35,10 @@ export const serverApi = {
   statement: () => serverRequest<StatementResponse>(API_PATHS.statement),
   analytics: () => serverRequest<AnalyticsResponse>(API_PATHS.analytics),
   depositHistory: () => serverRequest<DepositHistoryEntry[]>(API_PATHS.depositHistory),
-  async p2pCount(): Promise<number> {
+  async transferCount(): Promise<number> {
     const token = cookies().get("Authentication")?.value;
     try {
-      const res = await fetch(`${API_BASE_URL}${API_PATHS.p2pCount}`, {
+      const res = await fetch(`${API_BASE_URL}${API_PATHS.transferCount}`, {
         headers: token ? { Cookie: `Authentication=${token}` } : {},
         cache: "no-store",
       });

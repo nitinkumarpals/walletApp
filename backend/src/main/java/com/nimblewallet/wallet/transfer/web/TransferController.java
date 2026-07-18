@@ -26,7 +26,7 @@ public class TransferController {
     }
 
     /** Sends money to another user by email. Amount is in minor units (paise). */
-    @PostMapping("/p2p")
+    @PostMapping("/send")
     public Map<String, Object> transfer(@AuthenticationPrincipal AuthenticatedUser user,
                                         @Valid @RequestBody TransferRequest request) {
         transfers.transfer(user.id(), request.email(), request.amount());

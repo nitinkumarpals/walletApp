@@ -45,7 +45,7 @@
         }
       }
     },
-    "/transfer/p2p": {
+    "/transfer/send": {
       "post": {
         "tags": [
           "transfer-controller"
@@ -317,7 +317,7 @@
         }
       }
     },
-    "/activity/p2p-recipients": {
+    "/activity/recipients": {
       "get": {
         "tags": [
           "activity-controller"
@@ -340,7 +340,7 @@
         }
       }
     },
-    "/activity/p2p-count": {
+    "/activity/transfer-count": {
       "get": {
         "tags": [
           "activity-controller"
