@@ -1,0 +1,36 @@
+# Template for application-local.yml (which is GITIGNORED — it holds real secrets).
+#
+# Local dev:  copy this file to `application-local.yml` and fill in real values.
+#             The `local` Spring profile is active by default (see application.yml).
+# Production: do NOT use this file — supply the same values as environment variables
+#             (e.g. SPRING_DATASOURCE_URL, SPRING_DATASOURCE_PASSWORD, AUTH_SECRET,
+#             RAZORPAY_KEY_SECRET, SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET, ...)
+#             and run with SPRING_PROFILES_ACTIVE=prod.
+
+spring:
+  datasource:
+    # Supabase: on IPv4-only networks use the Session pooler host + user "postgres.<project-ref>".
+    url: jdbc:postgresql://<db-host>:5432/postgres?sslmode=require
+    username: <db-username>
+    password: <db-password>
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: <google-oauth-client-id>
+            client-secret: <google-oauth-client-secret>
+            scope:
+              - openid
+              - email
+              - profile
+            # Register this exact URI in the Google Cloud console.
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+
+wallet:
+  auth:
+    # Use a strong, random secret (>= 32 bytes recommended).
+    jwt-secret: <jwt-signing-secret>
+  razorpay:
+    key-id: <razorpay-key-id>
+    key-secret: <razorpay-key-secret>

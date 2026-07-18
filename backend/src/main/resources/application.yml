@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: wallet-backend
+  # Dev defaults to the gitignored "local" profile (real secrets live there).
+  # In production set SPRING_PROFILES_ACTIVE=prod and supply env vars.
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  jpa:
+    hibernate:
+      ddl-auto: validate          # schema is owned by Flyway, never Hibernate
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: wallet
+        format_sql: true
+  flyway:
+    schemas:
+      - wallet
+    default-schema: wallet
+    create-schemas: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, modulith
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+wallet:
+  cors:
+    allowed-origin: ${FRONTEND_ORIGIN:http://localhost:3000}
+  auth:
+    jwt-secret: ${AUTH_SECRET:}
+    jwt-expiry: 1d
+    cookie-name: Authentication
+    cookie-secure: ${AUTH_COOKIE_SECURE:false}
+    post-login-redirect: ${POST_LOGIN_REDIRECT:http://localhost:3000/dashboard}
+  razorpay:
+    key-id: ${RAZORPAY_KEY_ID:}
+    key-secret: ${RAZORPAY_KEY_SECRET:}
+
+logging:
+  level:
+    org.springframework.modulith: INFO

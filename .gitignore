@@ -36,3 +36,12 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Spring Boot backend
+backend/target/
+backend/*.log
+# Machine-specific Maven JVM args (e.g. Windows-ROOT truststore) — not for CI
+backend/.mvn/jvm.config
+# Local secret config (Spring profile "local")
+**/application-local.yml
+**/application-local.yaml
