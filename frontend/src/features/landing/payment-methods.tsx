@@ -32,7 +32,7 @@ const PaymentMethods: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
           <div>
-            <div className="label-mono mb-4">// add money</div>
+            <div className="label-mono mb-4">{"// add money"}</div>
             <h2 className="mono text-4xl md:text-6xl leading-[0.95] tracking-tight max-w-2xl">
               three rails.<br />zero friction.
             </h2>

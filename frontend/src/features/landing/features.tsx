@@ -10,7 +10,7 @@ const Features: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
           <div>
-            <div className="label-mono mb-4">// the surface</div>
+            <div className="label-mono mb-4">{"// the surface"}</div>
             <h2 className="mono text-4xl md:text-6xl leading-[0.95] tracking-tight max-w-2xl">
               one wallet.<br />every rail.
             </h2>

@@ -15,7 +15,7 @@ export default async function SettingsPage() {
   return (
     <>
       <div className="mb-10">
-        <div className="label-mono mb-3">// system</div>
+        <div className="label-mono mb-3">{"// system"}</div>
         <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">settings.</h1>
         <p className="text-muted-foreground mt-3 mono text-sm max-w-lg">
           manage your identity, security, and linked systems.

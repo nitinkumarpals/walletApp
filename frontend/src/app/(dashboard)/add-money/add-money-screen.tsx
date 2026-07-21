@@ -26,7 +26,7 @@ export default function AddMoneyScreen() {
   return (
     <>
       <div className="mb-10">
-        <div className="label-mono mb-3">// top up</div>
+        <div className="label-mono mb-3">{"// top up"}</div>
         <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">transfer.</h1>
         <p className="text-muted-foreground mt-3 mono text-sm">
           add money from card, bank, or upi in seconds.

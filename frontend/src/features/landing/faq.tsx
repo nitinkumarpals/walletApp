@@ -15,7 +15,7 @@ const FAQ: React.FC = () => {
   return (
     <section id="faq" className="px-4 md:px-8 py-24 md:py-32 border-b border-border">
       <div className="max-w-5xl mx-auto">
-        <div className="label-mono mb-4">// questions</div>
+        <div className="label-mono mb-4">{"// questions"}</div>
         <h2 className="mono text-4xl md:text-6xl leading-[0.95] tracking-tight mb-14">the fine print.</h2>
 
         <Accordion type="single" collapsible className="w-full border-t border-border">
