@@ -106,9 +106,9 @@ export default function AuthForm() {
 
         <div className="mb-8">
           <div className="mono text-lg mb-2">nimble<span className="text-lime">/</span></div>
-          <div className="label-mono mb-6">// {isLogin ? "sign in" : "create account"}</div>
+          <div className="label-mono mb-6">{"// "}{isLogin ? "sign in" : "create account"}</div>
           <h1 className="mono text-3xl md:text-4xl leading-[1] tracking-tight">
-            {isLogin ? "welcome back." : "let's get you set up."}
+            {isLogin ? "welcome back." : "let&apos;s get you set up."}
           </h1>
           <p className="text-muted-foreground mt-3 text-sm">
             {isLogin ? "Sign in to your Nimble account." : "Two minutes. No card required."}

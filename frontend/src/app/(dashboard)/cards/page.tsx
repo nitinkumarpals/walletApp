@@ -6,7 +6,7 @@ export default function CardsPage() {
   return (
     <>
       <div className="mb-10">
-        <div className="label-mono mb-3">// cards</div>
+        <div className="label-mono mb-3">{"// cards"}</div>
         <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">virtual cards.</h1>
         <p className="text-muted-foreground mt-3 mono text-sm max-w-lg">
           spin up single-use cards for subscriptions. coming soon.

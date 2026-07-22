@@ -16,7 +16,7 @@ const Security: React.FC = () => {
     <section id="security" className="px-4 md:px-8 py-24 md:py-32 border-b border-border">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
         <div className="lg:col-span-5">
-          <div className="label-mono mb-4">// trust surface</div>
+          <div className="label-mono mb-4">{"// trust surface"}</div>
           <h2 className="mono text-4xl md:text-6xl leading-[0.95] tracking-tight">
             encrypted<br />end-to-end.<br />
             <span className="text-muted-foreground">audited quarterly.</span>

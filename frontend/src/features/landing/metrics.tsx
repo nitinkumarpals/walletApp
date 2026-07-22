@@ -47,7 +47,7 @@ const Metrics: React.FC = () => {
   return (
     <section ref={ref} className="px-4 md:px-8 py-24">
       <div className="max-w-7xl mx-auto">
-        <div className="label-mono mb-6">// signal</div>
+        <div className="label-mono mb-6">{"// signal"}</div>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}

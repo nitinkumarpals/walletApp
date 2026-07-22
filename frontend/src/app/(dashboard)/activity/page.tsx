@@ -91,7 +91,7 @@ export default function ActivityPage() {
   return (
     <>
       <div className="mb-10">
-        <div className="label-mono mb-3">// ledger</div>
+        <div className="label-mono mb-3">{"// ledger"}</div>
         <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">transactions.</h1>
         <p className="text-muted-foreground mt-3 mono text-sm">
           every transfer and deposit, in one stream.
@@ -148,7 +148,7 @@ export default function ActivityPage() {
           >
             {filtered.length === 0 ? (
               <div className="p-10 text-center">
-                <div className="label-mono">// no transactions match</div>
+                <div className="label-mono">{"// no transactions match"}</div>
               </div>
             ) : (
               filtered.map((t) => (

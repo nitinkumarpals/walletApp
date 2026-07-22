@@ -9,7 +9,7 @@ const CTA: React.FC = () => {
       <div className="absolute inset-0 -z-10 dotgrid opacity-50" />
       <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[400px] blur-3xl -z-10 bg-[radial-gradient(ellipse_at_center,hsl(var(--lime)/0.15),transparent_60%)]" />
       <div className="max-w-7xl mx-auto text-center">
-        <div className="label-mono mb-6">// ready?</div>
+        <div className="label-mono mb-6">{"// ready?"}</div>
         <h2 className="mono text-5xl md:text-7xl lg:text-[112px] leading-[0.92] tracking-tight">
           your money,<br />
           <span className="gradient-text">unbound.</span>

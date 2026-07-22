@@ -140,7 +140,7 @@ export default function DashboardShell({
         </div>
         
         <h2 className="mb-4 mt-4 label-mono text-muted-foreground flex justify-start">
-          // navigation
+          {"// navigation"}
         </h2>
         
         <ul className="flex flex-col gap-1.5 flex-1">

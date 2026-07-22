@@ -40,7 +40,7 @@ const Hero: React.FC = () => {
           >
             <div className="flex items-center gap-3 label-mono mb-8">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-lime animate-ticker" />
-              <span>// v2.6 · sept 2026</span>
+              <span>{"// v2.6 · sept 2026"}</span>
             </div>
 
             <h1 className="mono font-medium text-foreground text-[44px] sm:text-6xl lg:text-[88px] leading-[0.95] tracking-tight">
@@ -79,7 +79,7 @@ const Hero: React.FC = () => {
           >
             <div className="tile p-6 md:p-8">
               <div className="flex items-center justify-between">
-                <span className="label-mono">// wallet</span>
+                <span className="label-mono">{"// wallet"}</span>
                 <span className="label-mono">USD · primary</span>
               </div>
               <div className="mt-8">

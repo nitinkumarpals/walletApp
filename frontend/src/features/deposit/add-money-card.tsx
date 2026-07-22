@@ -34,7 +34,7 @@ export default function AddMoneyCard({ refresh }: { refresh: () => void }) {
       document.body.appendChild(script);
     };
     loadRazorpay();
-  }, []);
+  }, [toast]);
 
   const handleAddMoney = async (e: React.FormEvent) => {
     e.preventDefault();

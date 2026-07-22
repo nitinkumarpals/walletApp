@@ -80,12 +80,12 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="mb-10">
-        <div className="label-mono mb-3">// overview</div>
+        <div className="label-mono mb-3">{"// overview"}</div>
         <h1 className="mono text-4xl md:text-5xl tracking-tight leading-[0.95]">
           welcome back, <span className="text-lime">{userName.toLowerCase()}</span>.
         </h1>
         <p className="text-muted-foreground mt-3 mono text-sm">
-          here's what your money did today.
+          here&apos;s what your money did today.
         </p>
       </div>
 
