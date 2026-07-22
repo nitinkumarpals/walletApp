@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import { BACKEND_URL, API_PATHS } from "./config";
+import { API_BASE_URL, API_PATHS } from "./config";
 import type {
   AnalyticsResponse,
   BalanceResponse,
@@ -17,7 +17,7 @@ import type {
 async function serverRequest<T>(path: string): Promise<T | null> {
   const token = cookies().get("Authentication")?.value;
   try {
-    const res = await fetch(`${BACKEND_URL}${path}`, {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
       headers: token ? { Cookie: `Authentication=${token}` } : {},
       cache: "no-store",
     });
@@ -38,7 +38,7 @@ export const serverApi = {
   async transferCount(): Promise<number> {
     const token = cookies().get("Authentication")?.value;
     try {
-      const res = await fetch(`${BACKEND_URL}${API_PATHS.transferCount}`, {
+      const res = await fetch(`${API_BASE_URL}${API_PATHS.transferCount}`, {
         headers: token ? { Cookie: `Authentication=${token}` } : {},
         cache: "no-store",
       });
