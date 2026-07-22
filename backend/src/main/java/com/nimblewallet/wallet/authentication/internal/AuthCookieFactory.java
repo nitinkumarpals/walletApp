@@ -26,7 +26,7 @@ public class AuthCookieFactory {
         return ResponseCookie.from(auth.cookieName(), token)
                 .httpOnly(true)
                 .secure(auth.cookieSecure())
-                .sameSite("Lax")
+                .sameSite(auth.cookieSecure() ? "None" : "Lax")
                 .path("/")
                 .maxAge(auth.jwtExpiry())
                 .build();
@@ -36,7 +36,7 @@ public class AuthCookieFactory {
         return ResponseCookie.from(auth.cookieName(), "")
                 .httpOnly(true)
                 .secure(auth.cookieSecure())
-                .sameSite("Lax")
+                .sameSite(auth.cookieSecure() ? "None" : "Lax")
                 .path("/")
                 .maxAge(0)
                 .build();
