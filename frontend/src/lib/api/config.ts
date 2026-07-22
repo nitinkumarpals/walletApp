@@ -2,8 +2,7 @@
  * Central API configuration. The backend base URL comes from the environment
  * so the app is not hardcoded to a single host.
  */
-export const CLIENT_API_BASE = "/api/backend";
-export const SERVER_API_BASE =
+export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
 
 /** All backend routes in one place (Spring backend). */

@@ -1,4 +1,4 @@
-import { CLIENT_API_BASE, API_PATHS } from "./config";
+import { API_BASE_URL, API_PATHS } from "./config";
 import type {
   BalanceResponse,
   DepositOrderResponse,
@@ -11,7 +11,7 @@ import type {
  * non-2xx response into an Error carrying the backend's ProblemDetail message.
  */
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${CLIENT_API_BASE}${path}`, {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
     credentials: "include",
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
@@ -51,7 +51,7 @@ export const authApi = {
       body: JSON.stringify(data),
     }),
   logout: () => apiRequest<void>(API_PATHS.logout, { method: "POST" }),
-  googleLoginUrl: () => `${CLIENT_API_BASE}${API_PATHS.googleLogin}`,
+  googleLoginUrl: () => `${API_BASE_URL}${API_PATHS.googleLogin}`,
 };
 
 export type RazorpayCapturePayload = {
