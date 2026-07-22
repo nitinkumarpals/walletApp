@@ -24,8 +24,11 @@ spring:
               - openid
               - email
               - profile
-            # Register this exact URI in the Google Cloud console.
-            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            # Must be an absolute frontend URL (proxied through Next.js's /login/oauth2/code
+            # rewrite) so the auth cookie Google's callback response sets ends up first-party
+            # on the frontend origin, not the backend's. Register this exact URI in the
+            # Google Cloud console.
+            redirect-uri: "${FRONTEND_ORIGIN:http://localhost:3000}/login/oauth2/code/google"
 
 wallet:
   auth:
