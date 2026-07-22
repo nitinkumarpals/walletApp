@@ -46,8 +46,14 @@ public class GoogleOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         AppUser user = authentication.findOrCreateGoogleUser(email, name, googleId);
         String token = jwtService.issue(user.getId(), user.getEmail(), user.getPhoneNumber());
-        response.addHeader(HttpHeaders.SET_COOKIE, cookieFactory.issue(token).toString());
 
-        getRedirectStrategy().sendRedirect(request, response, postLoginRedirect);
+        String redirectUrl = postLoginRedirect;
+        if (redirectUrl.contains("?")) {
+            redirectUrl += "&token=" + token;
+        } else {
+            redirectUrl += "?token=" + token;
+        }
+
+        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
