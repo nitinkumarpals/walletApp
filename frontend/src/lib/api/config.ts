@@ -3,7 +3,7 @@
  * so the app is not hardcoded to a single host.
  */
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api/backend";
 
 /** All backend routes in one place (Spring backend). */
 export const API_PATHS = {

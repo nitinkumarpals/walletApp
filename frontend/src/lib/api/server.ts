@@ -1,6 +1,10 @@
 import { cookies } from "next/headers";
 
-import { API_BASE_URL, API_PATHS } from "./config";
+import { API_PATHS } from "./config";
+
+// Server Components run outside the browser, so they can't use the relative
+// same-origin proxy path (/api/backend) — call the backend directly instead.
+const SERVER_API_BASE = process.env.BACKEND_URL ?? "http://localhost:8080";
 import type {
   AnalyticsResponse,
   BalanceResponse,
@@ -17,7 +21,7 @@ import type {
 async function serverRequest<T>(path: string): Promise<T | null> {
   const token = cookies().get("Authentication")?.value;
   try {
-    const res = await fetch(`${API_BASE_URL}${path}`, {
+    const res = await fetch(`${SERVER_API_BASE}${path}`, {
       headers: token ? { Cookie: `Authentication=${token}` } : {},
       cache: "no-store",
     });
@@ -38,7 +42,7 @@ export const serverApi = {
   async transferCount(): Promise<number> {
     const token = cookies().get("Authentication")?.value;
     try {
-      const res = await fetch(`${API_BASE_URL}${API_PATHS.transferCount}`, {
+      const res = await fetch(`${SERVER_API_BASE}${API_PATHS.transferCount}`, {
         headers: token ? { Cookie: `Authentication=${token}` } : {},
         cache: "no-store",
       });
