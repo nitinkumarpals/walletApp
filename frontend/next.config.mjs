@@ -9,6 +9,11 @@ const nextConfig = {
         destination: `${backendUrl}/:path*`,
       },
       {
+        // Proxy the initial OAuth2 redirect from Spring Security
+        source: "/oauth2/authorization/google",
+        destination: `${backendUrl}/oauth2/authorization/google`,
+      },
+      {
         // Special rewrite for the Google OAuth callback so Spring Boot receives it
         // properly and generates the correct redirect_uri
         source: "/login/oauth2/code/google",
